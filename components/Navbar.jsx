@@ -22,12 +22,12 @@ import {
   LocalOffer,
   Article,
   ContactMail,
-  Person,
   Menu,
   Close
 } from '@mui/icons-material';
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -84,30 +84,19 @@ export default function Navbar() {
           <Toolbar sx={{ justifyContent: "space-between" }}>
             
             {/* LOGO */}
-         <Link href="/" style={{ textDecoration: "none" }}>
-  <Box display="flex" alignItems="center">
-    
-    <Box
-      sx={{
-        width: 40,
-        height: 40,
-        mr: 2,
-        borderRadius: 2,
-        overflow: "hidden" // image clean crop ke liye
-      }}
-    >
-      <img 
-        src="/logo.png" 
-        alt="Logo" 
-        style={{ width: "100%", height: "100%", objectFit: "cover" }} 
-      />
-    </Box>
-
- 
-
-  </Box>
-</Link>
-
+            <Link href="/" style={{ textDecoration: "none" }}>
+              <Box display="flex" alignItems="center">
+                <Box sx={{ width: 40, height: 40, mr: 2, borderRadius: 2, overflow: "hidden" }}>
+                  <Image 
+                    src="/logo.png" 
+                    alt="BharatTrip Logo"
+                    width={40}
+                    height={40}
+                    style={{ objectFit: "cover" }}
+                  />
+                </Box>
+              </Box>
+            </Link>
 
             {/* DESKTOP MENU */}
             <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>

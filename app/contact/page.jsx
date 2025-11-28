@@ -5,12 +5,12 @@ import Link from "next/link";
 import {
   ThemeProvider,
   createTheme,
-  responsiveFontSizes,
+
   Container,
   Grid,
   Typography,
   Box,
-  Paper,
+
   Card,
   TextField,
   Button,
@@ -23,7 +23,7 @@ import {
   useTheme,
   CircularProgress,
   Stack,
-  Divider
+
 } from '@mui/material';
 import {
   Phone,
@@ -111,7 +111,6 @@ let theme = createTheme({
   },
 });
 
-theme = responsiveFontSizes(theme);
 
 export default function Contact() {
   const theme = useTheme();
@@ -249,7 +248,7 @@ export default function Contact() {
                 fontSize: { xs: '2.5rem', md: '3.5rem' }
               }}
             >
-              Let's Plan Your{" "}
+              Lets Plan Your{" "}
               <Box
                 component="span"
                 sx={{
@@ -272,7 +271,7 @@ export default function Contact() {
                 fontSize: { xs: '1.1rem', md: '1.25rem' }
               }}
             >
-              Have questions about your next adventure? We're here to help you create unforgettable memories in incredible India.
+              Have questions about your next adventure? We were here to help you create unforgettable memories in incredible India.
             </Typography>
           </Box>
 

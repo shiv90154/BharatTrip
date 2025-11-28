@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -79,7 +80,7 @@ function DestinationCard({ data, index }) {
         {/* CTA Button */}
         <Link
           href={`/destinations/${data.slug}`}
-          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2 group/btn"
+          className="w-full bg-linear-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2 group/btn"
         >
           <span>Explore Now</span>
           <span className="group-hover/btn:translate-x-1 transition-transform duration-200">→</span>
@@ -297,7 +298,7 @@ export default function Destinations() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-24 pb-12">
+      <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50 pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
@@ -317,7 +318,7 @@ export default function Destinations() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-24 pb-12">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50 pt-24 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
@@ -327,7 +328,7 @@ export default function Destinations() {
             <span>Explore India</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Discover <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Incredible India</span>
+            Discover <span className="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Incredible India</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             From snow-capped mountains to sun-kissed beaches, explore diverse landscapes and rich cultural heritage.
@@ -384,9 +385,9 @@ export default function Destinations() {
 
         {/* Call to Action */}
         <div className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white shadow-2xl">
+          <div className="bg-linear-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-4">
-              Can't Find Your Dream Destination?
+              Canot Find Your Dream Destination?
             </h2>
             <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
               Our travel experts can create a custom itinerary tailored to your preferences and budget.
