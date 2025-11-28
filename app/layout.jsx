@@ -1,18 +1,18 @@
-import "./globals.css";
 import Navbar from "@/components/Navbar";
+import BottomNav from "@/components/BottomNav";
 import Footer from "@/components/Footer";
-
-export const metadata = {
-  title: "BharatTrip – Explore India",
-  description: "Travel & Holiday Packages in India",
-};
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="text-gray-800">
+      <body>
         <Navbar />
-        <main className="min-h-screen">{children}</main>
+
+        <main style={{ paddingBottom: "70px" }}>
+          {children}
+        </main>
+
+        <BottomNav />
+
         <Footer />
       </body>
     </html>
