@@ -1,18 +1,16 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Home,
-  Mountain,
-  Map,
-  BookOpen,
-  PhoneCall,
-} from "lucide-react";
+import { Home, Mountain, Map, BookOpen, PhoneCall } from "lucide-react";
 
 export default function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
+
+  const [showNav, setShowNav] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const tabs = [
     { label: "Home", icon: Home, href: "/" },
@@ -24,10 +22,29 @@ export default function BottomNav() {
 
   const active = tabs.findIndex((t) => t.href === pathname);
 
+  // HANDLE HIDE / SHOW ON SCROLL
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+
+      if (currentY > lastScrollY) {
+        // user scrolling down → hide navbar
+        setShowNav(false);
+      } else {
+        // user scrolls up → show navbar
+        setShowNav(true);
+      }
+
+      setLastScrollY(currentY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   return (
     <motion.div
-      initial={{ y: 70 }}
-      animate={{ y: 0 }}
+      animate={{ y: showNav ? 0 : 90 }} // hides smoothly
       transition={{ duration: 0.35, ease: "easeOut" }}
       className="fixed bottom-0 left-0 right-0 z-[9999] md:hidden"
     >
@@ -43,19 +60,16 @@ export default function BottomNav() {
                 onClick={() => router.push(tab.href)}
                 className="flex flex-col items-center w-full py-1"
               >
-                {/* Icon */}
                 <motion.div
                   animate={{
                     scale: isActive ? 1.15 : 1,
                     color: isActive ? "#2563eb" : "#64748b",
                   }}
                   transition={{ duration: 0.2 }}
-                  className="flex flex-col items-center"
                 >
                   <Icon size={22} />
                 </motion.div>
 
-                {/* Label */}
                 <span
                   className={`text-xs mt-1 ${
                     isActive ? "text-blue-600 font-semibold" : "text-gray-500"
@@ -64,12 +78,15 @@ export default function BottomNav() {
                   {tab.label}
                 </span>
 
-                {/* Active Indicator */}
                 {isActive && (
                   <motion.div
                     layoutId="activeIndicator"
-                    className="w-6 h-1 rounded-full bg-blue-600 mt-1"
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="w-6 h-1 bg-blue-600 rounded-full mt-1"
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 20,
+                    }}
                   />
                 )}
               </button>
