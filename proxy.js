@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-export function middleware(req) {
+export const proxy = (req) => {
   const url = req.nextUrl.pathname;
   const token = req.cookies.get("token")?.value;
 
@@ -24,8 +24,8 @@ export function middleware(req) {
   }
 
   return NextResponse.next();
-}
+};
 
 export const config = {
-  matcher: ["/admin/:path*"]
+  matcher: ["/admin/:path*"],
 };
