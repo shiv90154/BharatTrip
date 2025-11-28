@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Home, Mountain, Map, BookOpen, PhoneCall } from "lucide-react";
+import { GalleryVerticalEnd } from "lucide-react";
 
 export default function BottomNav() {
   const pathname = usePathname();
@@ -12,13 +13,15 @@ export default function BottomNav() {
   const [showNav, setShowNav] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  const tabs = [
-    { label: "Home", icon: Home, href: "/" },
-    { label: "Packages", icon: Mountain, href: "/packages" },
-    { label: "Explore", icon: Map, href: "/destinations" },
-    { label: "Blogs", icon: BookOpen, href: "/blogs" },
-    { label: "Contact", icon: PhoneCall, href: "/contact" },
-  ];
+const tabs = [
+  { label: "Home", icon: Home, href: "/" },
+  { label: "Packages", icon: Mountain, href: "/packages" },
+  { label: "Explore", icon: Map, href: "/destinations" },
+{ label: "Gallery", icon: GalleryVerticalEnd, href: "/gallery" },
+  { label: "Blogs", icon: BookOpen, href: "/blogs" },
+  { label: "Contact", icon: PhoneCall, href: "/contact" },
+];
+
 
   const active = tabs.findIndex((t) => t.href === pathname);
 

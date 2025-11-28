@@ -37,13 +37,15 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navItems = [
-    { label: "Home", href: "/" },
-    { label: "Packages", href: "/packages" },
-    { label: "Destinations", href: "/destinations" },
-    { label: "Blogs", href: "/blogs" },
-    { label: "Contact", href: "/contact" },
-  ];
+const navItems = [
+  { label: "Home", href: "/" },
+  { label: "Packages", href: "/packages" },
+  { label: "Destinations", href: "/destinations" },
+  { label: "Gallery", href: "/gallery" },   // ⭐ ADDED
+  { label: "Blogs", href: "/blogs" },
+  { label: "Contact", href: "/contact" },
+];
+
 
   return (
     <>
