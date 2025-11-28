@@ -1,10 +1,14 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 
-// Sample detailed destination data
+// ---------------------------------------------
+// 🔥 SAMPLE DATA (same as before)
+// ---------------------------------------------
 const destinationDetails = {
   kashmir: {
     title: "Kashmir - Paradise on Earth",
@@ -201,392 +205,447 @@ const destinationDetails = {
     ]
   }
 };
+// ---------------------------------------------
+// ⚡ REUSABLE ANIMATION VARIANTS
+// ---------------------------------------------
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0 },
+};
 
+const fade = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1 },
+};
+
+const staggerContainer = {
+  show: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.9 },
+  show: { opacity: 1, scale: 1 },
+};
+
+// ---------------------------------------------
+// ⚡ MAIN PAGE COMPONENT
+// ---------------------------------------------
 export default function DestinationSlugPage() {
   const params = useParams();
   const slug = params.slug;
+
   const [destination, setDestination] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedImage, setSelectedImage] = useState(0);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
+  // Load data
   useEffect(() => {
     if (slug && destinationDetails[slug]) {
       setDestination(destinationDetails[slug]);
     }
   }, [slug]);
 
+  // ---------------------------------------
+  // ❌ NOT FOUND UI
+  // ---------------------------------------
   if (!destination) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-24 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">🔍</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Destination Not Found</h2>
-            <p className="text-gray-600 mb-6">The destination you're looking for doesn't exist.</p>
-            <Link href="/destinations" className="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-colors duration-200">
-              Browse All Destinations
-            </Link>
-          </div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center"
+        >
+          <div className="text-6xl mb-3">❌</div>
+          <h2 className="text-2xl font-bold">Destination Not Found</h2>
+          <Link href="/destinations" className="mt-6 inline-block bg-blue-500 text-white px-6 py-3 rounded-xl">
+            Browse Destinations
+          </Link>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-24 pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
-          <Link href="/" className="hover:text-blue-600 transition-colors duration-200">Home</Link>
-          <span>›</span>
-          <Link href="/destinations" className="hover:text-blue-600 transition-colors duration-200">Destinations</Link>
-          <span>›</span>
-          <span className="text-gray-900 font-medium">{destination.title}</span>
-        </nav>
+    <motion.div
+      initial="hidden"
+      animate="show"
+      variants={staggerContainer}
+      className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-24 pb-12"
+    >
+      <div className="max-w-7xl mx-auto px-4">
 
-        {/* Hero Section */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
-            
-            {/* Image Gallery */}
-            <div className="space-y-4">
-              <div className="bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl h-80 flex items-center justify-center text-8xl">
+        {/* -------------------------------------
+          🧭 BREADCRUMB
+        -------------------------------------- */}
+        <motion.nav variants={fadeUp} className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
+          <Link href="/" className="hover:text-blue-600">Home</Link>
+          <span>›</span>
+          <Link href="/destinations" className="hover:text-blue-600">Destinations</Link>
+          <span>›</span>
+          <span className="font-semibold text-gray-900">{destination.title}</span>
+        </motion.nav>
+
+        {/* -------------------------------------
+          🎆 HERO SECTION
+        -------------------------------------- */}
+        <motion.section variants={fadeUp} className="bg-white rounded-2xl shadow-xl overflow-hidden mb-10 p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+            {/* IMAGE GALLERY */}
+            <motion.div variants={fadeUp} className="space-y-4">
+              <motion.div
+                key={selectedImage}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="h-80 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center text-8xl"
+              >
                 {destination.images[selectedImage]}
-              </div>
+              </motion.div>
+
+              {/* Thumbnails */}
               <div className="grid grid-cols-4 gap-4">
-                {destination.images.map((image, index) => (
-                  <button
+                {destination.images.map((img, index) => (
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl h-20 flex items-center justify-center text-2xl transition-all duration-200 ${
-                      selectedImage === index ? 'ring-2 ring-blue-500 scale-105' : 'hover:scale-105'
-                    }`}
+                    className={`rounded-xl h-20 flex items-center justify-center text-3xl 
+                      bg-gradient-to-br from-blue-50 to-purple-50 
+                      ${selectedImage === index ? "ring-2 ring-blue-500 scale-105" : ""}`}
                   >
-                    {image}
-                  </button>
+                    {img}
+                  </motion.button>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
-            {/* Destination Info */}
-            <div className="space-y-6">
-              <div className="flex items-start justify-between">
+            {/* RIGHT CONTENT */}
+            <motion.div variants={fadeUp} className="space-y-6">
+
+              {/* TITLE */}
+              <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                    {destination.title}
-                  </h1>
-                  <div className="flex items-center space-x-4 text-gray-600">
-                    <span className="flex items-center space-x-1">
-                      <span>⭐</span>
-                      <span>{destination.rating}/5</span>
-                    </span>
-                    <span>•</span>
-                    <span>{destination.flag}</span>
-                    <span>•</span>
-                    <span>{destination.category}</span>
-                  </div>
+                  <h1 className="text-4xl font-bold">{destination.title}</h1>
+                  <p className="text-gray-600 flex items-center gap-3 mt-1">
+                    ⭐ {destination.rating} • {destination.flag} • {destination.category}
+                  </p>
                 </div>
-                <span className="text-4xl">{destination.icon}</span>
+                <span className="text-5xl">{destination.icon}</span>
               </div>
 
-              <p className="text-lg text-gray-700 leading-relaxed">
+              {/* DESCRIPTION */}
+              <p className="text-gray-700 text-lg">
                 {destination.detailedDescription}
               </p>
 
-              {/* Quick Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
-                <div className="text-center p-4 bg-blue-50 rounded-xl">
-                  <div className="text-2xl font-bold text-blue-600">{destination.duration}</div>
-                  <div className="text-sm text-gray-600">Duration</div>
-                </div>
-                <div className="text-center p-4 bg-green-50 rounded-xl">
-                  <div className="text-2xl font-bold text-green-600">${destination.price}</div>
-                  <div className="text-sm text-gray-600">Starting Price</div>
-                </div>
-                <div className="text-center p-4 bg-purple-50 rounded-xl">
-                  <div className="text-2xl font-bold text-purple-600">{destination.groupSize}</div>
-                  <div className="text-sm text-gray-600">Group Size</div>
-                </div>
-                <div className="text-center p-4 bg-orange-50 rounded-xl">
-                  <div className="text-2xl font-bold text-orange-600">{destination.temperature}</div>
-                  <div className="text-sm text-gray-600">Average Temp</div>
-                </div>
-              </div>
+              {/* QUICK STATS */}
+              <motion.div
+                variants={staggerContainer}
+                className="grid grid-cols-2 md:grid-cols-4 gap-4"
+              >
+                {[
+                  { label: "Duration", value: destination.duration, color: "blue" },
+                  { label: "Price", value: "$" + destination.price, color: "green" },
+                  { label: "Group Size", value: destination.groupSize, color: "purple" },
+                  { label: "Avg Temp", value: destination.temperature, color: "orange" },
+                ].map((stat, i) => (
+                  <motion.div key={i} variants={scaleIn} className={`p-4 bg-${stat.color}-50 rounded-xl text-center`}>
+                    <div className={`text-2xl font-bold text-${stat.color}-600`}>{stat.value}</div>
+                    <div className="text-gray-600 text-sm">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </motion.div>
 
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <button 
+              {/* CTA BUTTONS */}
+              <div className="flex flex-col sm:flex-row gap-5 pt-4">
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.05 }}
                   onClick={() => setIsBookingModalOpen(true)}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2"
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold shadow-md"
                 >
-                  <span>🎒</span>
-                  <span>Book This Package</span>
-                </button>
-                <button className="px-6 py-4 border-2 border-gray-300 rounded-xl font-semibold hover:border-blue-500 hover:text-blue-600 transition-all duration-200 flex items-center justify-center space-x-2">
-                  <span>💖</span>
-                  <span>Save for Later</span>
-                </button>
+                  🎒 Book This Package
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  className="px-6 py-4 border-2 border-gray-300 rounded-xl font-semibold hover:text-blue-600 hover:border-blue-500"
+                >
+                  💖 Save for Later
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.section>
 
-        {/* Tab Navigation */}
-        <div className="bg-white rounded-2xl shadow-lg mb-8">
-          <div className="border-b border-gray-200">
-            <nav className="flex overflow-x-auto">
-              {[
-                { id: "overview", label: "Overview", icon: "📖" },
-                { id: "itinerary", label: "Itinerary", icon: "🗓️" },
-                { id: "highlights", label: "Highlights", icon: "⭐" },
-                { id: "inclusions", label: "Inclusions", icon: "✅" },
-                { id: "reviews", label: "Reviews", icon: "💬" }
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 px-6 py-4 border-b-2 font-medium whitespace-nowrap transition-colors duration-200 ${
-                    activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  <span>{tab.icon}</span>
-                  <span>{tab.label}</span>
-                </button>
-              ))}
-            </nav>
+        {/* -------------------------------------
+          📑 TABS
+        -------------------------------------- */}
+        <motion.div variants={fadeUp} className="bg-white rounded-2xl shadow-lg">
+
+          {/* TAB HEADER */}
+          <div className="border-b flex overflow-x-auto">
+            {[
+              { id: "overview", icon: "📖", label: "Overview" },
+              { id: "itinerary", icon: "🗓️", label: "Itinerary" },
+              { id: "highlights", icon: "⭐", label: "Highlights" },
+              { id: "inclusions", icon: "🎁", label: "Inclusions" },
+              { id: "reviews", icon: "💬", label: "Reviews" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-6 py-4 flex items-center gap-2 font-medium border-b-2 transition-all 
+                  ${activeTab === tab.id ? "border-blue-600 text-blue-600" : "border-transparent text-gray-500"}`}
+              >
+                {tab.icon} {tab.label}
+              </button>
+            ))}
           </div>
 
-          {/* Tab Content */}
+          {/* TAB CONTENT */}
           <div className="p-8">
-            {activeTab === "overview" && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold mb-4">About {destination.title}</h3>
-                  <p className="text-gray-700 leading-relaxed">
-                    {destination.detailedDescription}
-                  </p>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h4 className="text-lg font-semibold">Quick Facts</h4>
-                    <div className="space-y-2">
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Best Time to Visit</span>
-                        <span className="font-medium">{destination.bestTime}</span>
-                      </div>
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Difficulty Level</span>
-                        <span className="font-medium">{destination.difficulty}</span>
-                      </div>
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Category</span>
-                        <span className="font-medium capitalize">{destination.category}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-lg font-semibold mb-4">Why Choose This Package?</h4>
-                    <ul className="space-y-2">
-                      {destination.highlights.slice(0, 4).map((highlight, index) => (
-                        <li key={index} className="flex items-center space-x-2 text-gray-700">
-                          <span className="text-green-500">✓</span>
-                          <span>{highlight}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {/* ----------------------
+                  OVERVIEW TAB
+                ----------------------- */}
+                {activeTab === "overview" && (
+                  <motion.div variants={staggerContainer}>
 
-            {activeTab === "itinerary" && (
-              <div className="space-y-6">
-                <h3 className="text-xl font-semibold">Tour Itinerary</h3>
-                <div className="space-y-4">
-                  {destination.itinerary.map((day) => (
-                    <div key={day.day} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl">
-                      <div className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold flex-shrink-0">
-                        Day {day.day}
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900 mb-1">{day.title}</h4>
-                        <p className="text-gray-600">{day.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+                    <motion.div variants={fadeUp} className="mb-6">
+                      <h3 className="text-xl font-semibold mb-3">About This Destination</h3>
+                      <p className="text-gray-700">{destination.detailedDescription}</p>
+                    </motion.div>
 
-            {activeTab === "highlights" && (
-              <div className="space-y-6">
-                <h3 className="text-xl font-semibold">Package Highlights</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {destination.highlights.map((highlight, index) => (
-                    <div key={index} className="flex items-center space-x-3 p-3 bg-blue-50 rounded-xl">
-                      <span className="text-blue-500 text-lg">✨</span>
-                      <span className="text-gray-700">{highlight}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {activeTab === "inclusions" && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h4 className="text-lg font-semibold mb-4 text-green-600">What's Included</h4>
-                  <ul className="space-y-2">
-                    {destination.inclusions.map((item, index) => (
-                      <li key={index} className="flex items-center space-x-2 text-gray-700">
-                        <span className="text-green-500">✓</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold mb-4 text-red-600">What's Not Included</h4>
-                  <ul className="space-y-2">
-                    {destination.exclusions.map((item, index) => (
-                      <li key={index} className="flex items-center space-x-2 text-gray-700">
-                        <span className="text-red-500">✗</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
-
-            {activeTab === "reviews" && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold">Traveler Reviews</h3>
-                  <div className="flex items-center space-x-2 bg-blue-50 px-4 py-2 rounded-full">
-                    <span className="text-yellow-500">⭐</span>
-                    <span className="font-semibold">{destination.rating}/5</span>
-                    <span className="text-gray-600">({destination.reviews.length} reviews)</span>
-                  </div>
-                </div>
-                
-                <div className="space-y-4">
-                  {destination.reviews.map((review, index) => (
-                    <div key={index} className="p-6 bg-gray-50 rounded-xl">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center font-semibold">
-                            {review.name.charAt(0)}
+                    {/* Highlights */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                      <motion.div variants={fadeUp}>
+                        <h4 className="text-lg font-semibold mb-3">Quick Facts</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between py-2 border-b text-gray-700">
+                            <span>Best Time</span>
+                            <span>{destination.bestTime}</span>
                           </div>
-                          <div>
-                            <h4 className="font-semibold">{review.name}</h4>
-                            <div className="flex items-center space-x-1">
-                              {[...Array(5)].map((_, i) => (
-                                <span key={i} className={i < review.rating ? "text-yellow-400" : "text-gray-300"}>
-                                  ⭐
-                                </span>
-                              ))}
-                            </div>
+                          <div className="flex justify-between py-2 border-b text-gray-700">
+                            <span>Difficulty</span>
+                            <span>{destination.difficulty}</span>
+                          </div>
+                          <div className="flex justify-between py-2 border-b text-gray-700">
+                            <span>Category</span>
+                            <span className="capitalize">{destination.category}</span>
                           </div>
                         </div>
-                        <span className="text-gray-500 text-sm">{review.date}</span>
-                      </div>
-                      <p className="text-gray-700">{review.comment}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+                      </motion.div>
 
-        {/* Related Destinations */}
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <h3 className="text-xl font-semibold mb-6">You Might Also Like</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {Object.values(destinationDetails)
-              .filter(d => d.slug !== destination.slug)
-              .slice(0, 4)
-              .map((related) => (
-                <Link
-                  key={related.slug}
-                  href={`/destinations/${related.slug}`}
-                  className="block bg-gray-50 rounded-xl p-4 hover:shadow-lg transition-all duration-200 hover:scale-105"
-                >
-                  <div className="text-4xl mb-3 text-center">{related.icon}</div>
-                  <h4 className="font-semibold text-gray-900 mb-1">{related.title.split(' - ')[0]}</h4>
-                  <div className="flex items-center justify-between text-sm text-gray-600">
-                    <span>⭐ {related.rating}</span>
-                    <span>${related.price}</span>
+                      <motion.div variants={fadeUp}>
+                        <h4 className="text-lg font-semibold mb-3">Why Choose This?</h4>
+                        <ul className="space-y-3">
+                          {destination.highlights.slice(0, 4).map((h, i) => (
+                            <motion.li
+                              key={i}
+                              variants={fade}
+                              className="flex items-center gap-3"
+                            >
+                              <span className="text-green-500 text-xl">✓</span>
+                              <span>{h}</span>
+                            </motion.li>
+                          ))}
+                        </ul>
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* ----------------------
+                  ITINERARY TAB
+                ----------------------- */}
+                {activeTab === "itinerary" && (
+                  <div className="space-y-4">
+                    {destination.itinerary.map((day) => (
+                      <motion.div
+                        key={day.day}
+                        variants={fadeUp}
+                        className="p-5 bg-gray-50 rounded-xl flex gap-4"
+                      >
+                        <div className="w-14 h-14 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                          {day.day}
+                        </div>
+
+                        <div>
+                          <h4 className="font-semibold">{day.title}</h4>
+                          <p className="text-gray-600">{day.description}</p>
+                        </div>
+                      </motion.div>
+                    ))}
                   </div>
-                </Link>
-              ))}
+                )}
+
+                {/* ----------------------
+                  HIGHLIGHTS TAB
+                ----------------------- */}
+                {activeTab === "highlights" && (
+                  <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {destination.highlights.map((h, i) => (
+                      <motion.div
+                        variants={scaleIn}
+                        key={i}
+                        className="p-4 bg-blue-50 rounded-xl flex items-center gap-3"
+                      >
+                        <span className="text-blue-500 text-xl">✨</span>
+                        <span>{h}</span>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+
+                {/* ----------------------
+                  INCLUSIONS TAB
+                ----------------------- */}
+                {activeTab === "inclusions" && (
+                  <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <motion.div variants={fadeUp}>
+                      <h4 className="text-lg font-semibold text-green-600">Included</h4>
+                      <ul className="space-y-2 mt-3">
+                        {destination.inclusions.map((i, idx) => (
+                          <li key={idx} className="flex items-center gap-3">
+                            <span className="text-green-600">✓</span>
+                            <span>{i}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </motion.div>
+
+                    <motion.div variants={fadeUp}>
+                      <h4 className="text-lg font-semibold text-red-600">Not Included</h4>
+                      <ul className="space-y-2 mt-3">
+                        {destination.exclusions.map((i, idx) => (
+                          <li key={idx} className="flex items-center gap-3">
+                            <span className="text-red-600">✗</span>
+                            <span>{i}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  </motion.div>
+                )}
+
+                {/* ----------------------
+                  REVIEWS TAB
+                ----------------------- */}
+                {activeTab === "reviews" && (
+                  <motion.div variants={staggerContainer} className="space-y-6">
+                    {destination.reviews.map((review, idx) => (
+                      <motion.div key={idx} variants={fadeUp} className="p-5 bg-gray-50 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center font-bold">
+                              {review.name[0]}
+                            </div>
+                            <div>
+                              <h4 className="font-semibold">{review.name}</h4>
+                              <p className="text-yellow-500">{Array(review.rating).fill("⭐").join("")}</p>
+                            </div>
+                          </div>
+                          <span className="text-sm text-gray-500">{review.date}</span>
+                        </div>
+                        <p className="text-gray-700">{review.comment}</p>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </motion.div>
+            </AnimatePresence>
           </div>
-        </div>
+        </motion.div>
+
+        {/* -------------------------------------
+          🔗 RELATED DESTINATIONS
+        -------------------------------------- */}
+        <motion.div variants={fadeUp} className="bg-white rounded-2xl shadow-lg p-8 mt-12">
+          <h3 className="text-xl font-semibold mb-6">You May Also Like</h3>
+
+          <motion.div
+            variants={staggerContainer}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            {Object.values(destinationDetails)
+              .filter((d) => d.slug !== destination.slug)
+              .slice(0, 4)
+              .map((related, i) => (
+                <motion.div
+                  key={related.slug}
+                  variants={scaleIn}
+                  whileHover={{ scale: 1.05 }}
+                  className="bg-gray-50 p-5 rounded-xl cursor-pointer shadow hover:shadow-lg"
+                >
+                  <Link href={`/destinations/${related.slug}`}>
+                    <div className="text-center text-5xl">{related.icon}</div>
+                    <p className="font-semibold mt-3">{related.title.split(" - ")[0]}</p>
+                    <p className="text-gray-600 text-sm flex justify-between mt-2">
+                      ⭐ {related.rating}
+                      <span>${related.price}</span>
+                    </p>
+                  </Link>
+                </motion.div>
+              ))}
+          </motion.div>
+        </motion.div>
       </div>
 
-      {/* Booking Modal */}
-      {isBookingModalOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-semibold">Book {destination.title}</h3>
-              <button 
-                onClick={() => setIsBookingModalOpen(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Number of Travelers</label>
-                <select className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  {[1,2,3,4,5,6,7,8].map(num => (
-                    <option key={num} value={num}>{num} {num === 1 ? 'Traveler' : 'Travelers'}</option>
-                  ))}
-                </select>
+      {/* -------------------------------------
+        🎉 BOOKING MODAL WITH ANIMATION
+      -------------------------------------- */}
+      <AnimatePresence>
+        {isBookingModalOpen && (
+          <motion.div
+            key="bookingModal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 40 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white p-8 rounded-2xl max-w-md w-full shadow-xl"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-semibold">Book {destination.title}</h3>
+                <button onClick={() => setIsBookingModalOpen(false)}>✕</button>
               </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Travel Dates</label>
-                <input type="date" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+              <div className="space-y-4">
+                <input type="date" className="w-full border rounded-xl p-3" />
+
+                <textarea
+                  rows={3}
+                  placeholder="Special requests..."
+                  className="w-full border rounded-xl p-3"
+                />
+
+                <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl py-4 font-semibold">
+                  Proceed to Payment
+                </button>
               </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Special Requirements</label>
-                <textarea 
-                  rows="3" 
-                  placeholder="Any dietary restrictions, accessibility needs, or special requests..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                ></textarea>
-              </div>
-              
-              <div className="bg-blue-50 p-4 rounded-xl">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-600">Package Price</span>
-                  <span className="font-semibold">${destination.price}/person</span>
-                </div>
-                <div className="flex justify-between items-center font-semibold text-lg">
-                  <span>Total Amount</span>
-                  <span className="text-blue-600">${destination.price}</span>
-                </div>
-              </div>
-              
-              <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-200">
-                Proceed to Payment
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }

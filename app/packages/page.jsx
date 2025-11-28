@@ -1,26 +1,10 @@
 "use client";
 
-import { 
-  Container, 
-  Grid, 
-  Typography, 
-  Box, 
-  Paper,
-  Chip,
-  alpha,
-  useTheme
-} from '@mui/material';
-import { 
-  LocationOn, 
-  AccessTime, 
-  Star, 
-  LocalOffer 
-} from '@mui/icons-material';
+import { motion } from "framer-motion";
 import PackageCard from "@/components/PackageCard";
 
 export default function Packages() {
-  const theme = useTheme();
-  
+
   const packages = [
     { 
       title: "Kashmir 5N/6D", 
@@ -109,97 +93,75 @@ export default function Packages() {
   ];
 
   return (
-    <Box 
-      sx={{ 
-        pt: { xs: 12, md: 14 },
-        minHeight: '100vh',
-        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.secondary.main, 0.05)} 100%)`
-      }}
-    >
-      <Container maxWidth="xl">
-        {/* Header Section */}
-        <Box 
-          sx={{ 
-            textAlign: 'center', 
-            mb: 8,
-            px: 2
-          }}
+    <div className="pt-24 min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      <div className="max-w-7xl mx-auto px-4">
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-14"
         >
-          <Chip 
-            label="Explore Destinations" 
-            color="primary" 
-            variant="outlined"
-            sx={{ mb: 2 }}
-          />
-          <Typography 
-            variant="h2" 
-            component="h1" 
-            sx={{ 
-              fontWeight: 'bold',
-              background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              color: 'transparent',
-              mb: 2
-            }}
-          >
+          <span className="px-4 py-1 border border-blue-500 text-blue-500 rounded-full text-sm">
+            Explore Destinations
+          </span>
+
+          <h1 className="text-4xl md:text-6xl font-extrabold mt-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Discover Amazing Packages
-          </Typography>
-          <Typography 
-            variant="h6" 
-            color="text.secondary" 
-            sx={{ maxWidth: 600, mx: 'auto' }}
-          >
-            Handpicked experiences with the perfect blend of adventure, culture, and relaxation
-          </Typography>
-        </Box>
+          </h1>
+
+          <p className="max-w-xl mx-auto text-gray-600 text-lg mt-3">
+            Handpicked experiences with adventure, culture and relaxation.
+          </p>
+        </motion.div>
 
         {/* Packages Grid */}
-        <Grid container spacing={3}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {packages.map((pkg, index) => (
-            <Grid item xs={12} sm={6} lg={4} key={pkg.slug}>
-              <PackageCard 
-                data={pkg} 
-                featured={pkg.featured}
-                delay={index * 100}
-              />
-            </Grid>
+            <motion.div
+              key={pkg.slug}
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+            >
+              <PackageCard data={pkg} />
+            </motion.div>
           ))}
-        </Grid>
+        </div>
 
-        {/* Info Section */}
-        <Paper 
-          elevation={0}
-          sx={{ 
-            mt: 8,
-            p: 4,
-            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.secondary.main, 0.1)} 100%)`,
-            borderRadius: 4,
-            textAlign: 'center'
-          }}
+        {/* Why Choose Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="mt-16 p-10 bg-gradient-to-r from-blue-100/50 to-purple-100/50 rounded-2xl shadow-lg text-center backdrop-blur"
         >
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
-            Why Choose Our Packages?
-          </Typography>
-          <Grid container spacing={3} sx={{ mt: 1 }}>
+          <h2 className="text-3xl font-bold mb-6">Why Choose Our Packages?</h2>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { icon: <Star color="primary" />, text: "Best Price Guarantee" },
-              { icon: <LocationOn color="secondary" />, text: "Verified Stays" },
-              { icon: <AccessTime color="success" />, text: "Flexible Dates" },
-              { icon: <LocalOffer color="warning" />, text: "Easy Cancellation" }
-            ].map((item, index) => (
-              <Grid item xs={6} md={3} key={index}>
-                <Box sx={{ textAlign: 'center' }}>
-                  {item.icon}
-                  <Typography variant="body2" sx={{ mt: 1, fontWeight: 500 }}>
-                    {item.text}
-                  </Typography>
-                </Box>
-              </Grid>
+              { text: "Best Price Guarantee", icon: "⭐" },
+              { text: "Verified Stays", icon: "📍" },
+              { text: "Flexible Dates", icon: "⏱️" },
+              { text: "Easy Cancellation", icon: "🏷️" }
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 200 }}
+                className="p-4 rounded-xl bg-white shadow text-center"
+              >
+                <div className="text-3xl">{item.icon}</div>
+                <p className="mt-2 font-semibold text-gray-700">{item.text}</p>
+              </motion.div>
             ))}
-          </Grid>
-        </Paper>
-      </Container>
-    </Box>
+          </div>
+        </motion.div>
+
+      </div>
+    </div>
   );
 }

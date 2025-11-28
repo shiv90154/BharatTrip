@@ -1,63 +1,14 @@
 "use client";
 
-import { 
-  AppBar,
-  Toolbar,
-  Box,
-  Button,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Container,
-  alpha,
-  Typography
-} from '@mui/material';
-
-import {
-  Home,
-  Explore,
-  LocalOffer,
-  Article,
-  ContactMail,
-  Menu,
-  Close
-} from '@mui/icons-material';
-
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
-
-const customTheme = {
-  primaryBlue: '#0C3C8C',
-  brightBlue: '#1D4ED8',
-  accentOrange: '#F97316',
-  lightOrange: '#FB923C',
-  bgLight: '#FFFFFF',
-  textDark: '#1E293B'
-};
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
-  const pathname = usePathname();
-  const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
-  const navItems = [
-    { id: "home", href: "/", label: "Home", icon: <Home fontSize="small" /> },
-    { id: "packages", href: "/packages", label: "Packages", icon: <LocalOffer fontSize="small" /> },
-    { id: "destinations", href: "/destinations", label: "Explore", icon: <Explore fontSize="small" /> },
-    { id: "blogs", href: "/blogs", label: "Blogs", icon: <Article fontSize="small" /> },
-    { id: "contact", href: "/contact", label: "Contact", icon: <ContactMail fontSize="small" /> }
-  ];
-
-  const getActiveTab = () => {
-    if (pathname === '/') return "home";
-    const match = navItems.find(item => pathname.startsWith(item.href));
-    return match?.id || "home";
-  };
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -65,106 +16,135 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const activeTab = getActiveTab();
+  const navItems = [
+    { label: "Home", href: "/" },
+    { label: "Packages", href: "/packages" },
+    { label: "Destinations", href: "/destinations" },
+    { label: "Blogs", href: "/blogs" },
+    { label: "Contact", href: "/contact" },
+  ];
 
   return (
     <>
-      <AppBar
-        position="fixed"
-        sx={{
-          backgroundColor: alpha(customTheme.bgLight, 0.98),
-          color: customTheme.textDark,
-          backdropFilter: "blur(20px)",
-          boxShadow: scrolled ? 2 : 0,
-          transition: "all 0.3s ease",
-          py: 1.2
+      {/* Navbar */}
+      <motion.nav
+        animate={{
+          backgroundColor: scrolled ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.4)",
+          backdropFilter: "blur(16px)",
+          boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.1)" : "none",
         }}
+        transition={{ duration: 0.3 }}
+        className="fixed top-0 left-0 w-full z-50 border-b border-white/20"
       >
-        <Container maxWidth="xl">
-          <Toolbar sx={{ justifyContent: "space-between" }}>
-            
-            {/* LOGO */}
-            <Link href="/" style={{ textDecoration: "none" }}>
-              <Box display="flex" alignItems="center">
-                <Box sx={{ width: 40, height: 40, mr: 2, borderRadius: 2, overflow: "hidden" }}>
-                  <Image 
-                    src="/logo.png" 
-                    alt="BharatTrip Logo"
-                    width={40}
-                    height={40}
-                    style={{ objectFit: "cover" }}
-                  />
-                </Box>
-              </Box>
-            </Link>
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between">
 
-            {/* DESKTOP MENU */}
-            <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+          {/* Logo */}
+          <Link href="/">
+            <div className="flex items-center gap-2 cursor-pointer">
+              <Image
+                src="/logo.png"
+                alt="BharatTrip Logo"
+                width={45}
+                height={45}
+                className="rounded-md"
+              />
+              <span className="font-bold text-gray-800 text-xl hidden sm:block">
+                BharatTrip
+              </span>
+            </div>
+          </Link>
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center gap-6">
+            {navItems.map((item) => (
+              <Link key={item.href} href={item.href}>
+                <motion.span
+                  whileHover={{ scale: 1.05 }}
+                  className="text-gray-700 hover:text-blue-600 font-medium cursor-pointer"
+                >
+                  {item.label}
+                </motion.span>
+              </Link>
+            ))}
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              className="bg-gradient-to-r from-blue-600 to-orange-500 text-white px-5 py-2 rounded-lg shadow-md"
+            >
+              Book Now
+            </motion.button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setOpen(true)}
+            className="md:hidden text-gray-700"
+          >
+            <Menu size={28} />
+          </button>
+        </div>
+      </motion.nav>
+
+      {/* Spacer */}
+      <div className="h-20"></div>
+
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", stiffness: 120, damping: 20 }}
+            className="fixed top-0 right-0 w-72 h-full bg-white shadow-2xl z-50 p-6"
+          >
+            {/* Close Button */}
+            <div className="flex justify-end mb-8">
+              <button onClick={() => setOpen(false)}>
+                <X size={28} className="text-gray-700" />
+              </button>
+            </div>
+
+            <div className="space-y-6">
               {navItems.map((item) => (
-                <Link href={item.href} key={item.id} style={{ textDecoration: "none" }}>
-                  <Button
-                    startIcon={item.icon}
-                    sx={{
-                      color: activeTab === item.id ? customTheme.brightBlue : customTheme.textDark,
-                      backgroundColor: activeTab === item.id ? alpha(customTheme.brightBlue, 0.1) : "transparent",
-                      "&:hover": {
-                        backgroundColor: alpha(customTheme.brightBlue, 0.15),
-                      },
-                      borderRadius: 2,
-                      px: 3
-                    }}
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                >
+                  <motion.div
+                    whileTap={{ scale: 0.96 }}
+                    className="flex items-center text-lg font-medium text-gray-700 hover:text-blue-600"
                   >
                     {item.label}
-                  </Button>
+                  </motion.div>
                 </Link>
               ))}
 
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: customTheme.accentOrange,
-                  "&:hover": { backgroundColor: customTheme.lightOrange }
-                }}
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                className="w-full bg-gradient-to-r from-blue-600 to-orange-500 text-white py-3 rounded-lg"
               >
                 Book Now
-              </Button>
-            </Box>
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            {/* MOBILE MENU ICON */}
-            <IconButton sx={{ display: { md: "none" }}} onClick={() => setOpen(true)}>
-              {open ? <Close /> : <Menu />}
-            </IconButton>
-          </Toolbar>
-        </Container>
-      </AppBar>
-
-      {/* MOBILE DRAWER */}
-      <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
-        <Box sx={{ width: 280, p: 3, background: customTheme.primaryBlue, height: "100%" }}>
-          <Typography variant="h6" color="white" mb={2}>BharatTrip</Typography>
-
-          <List>
-            {navItems.map((item) => (
-              <ListItem
-                key={item.id}
-                component={Link}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                sx={{
-                  borderRadius: 2,
-                  color: "white",
-                  "&:hover": { backgroundColor: alpha("#fff", 0.2) }
-                }}
-              >
-                <ListItemIcon sx={{ color: "white" }}>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.label} />
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      </Drawer>
-
-      <Toolbar />
+      {/* Overlay */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            onClick={() => setOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.4 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black z-40"
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }
+  

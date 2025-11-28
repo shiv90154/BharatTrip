@@ -1,332 +1,224 @@
 "use client";
 
-import {
-  Box,
-  Container,
-  Grid,
-  Typography,
-  Link,
-  TextField,
-  Button,
-  IconButton,
-  Stack,
-  Divider,
-  Paper,
-  Fab,
-  useTheme,
-  alpha
-} from '@mui/material';
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { useState } from "react";
 
 import {
   Facebook,
   Instagram,
   Twitter,
-  LinkedIn,
-  Email,
+  Linkedin,
+  Mail,
   Phone,
-  LocationOn,
+  MapPin,
   Send,
-  WhatsApp
-} from '@mui/icons-material';
-
-import { useState } from 'react';
+  MessageCircle
+} from "lucide-react";
 
 export default function Footer() {
-  const theme = useTheme();
   const [email, setEmail] = useState("");
 
-  const colors = {
-    primaryBlue: "#0C3C8C",
-    brightBlue: "#1D4ED8",
-    accentOrange: "#F97316",
-    lightOrange: "#FB923C",
-    bgLight: "#F8F9FA",
-    textDark: "#1E293B"
-  };
-
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    alert("Thank you for subscribing!");
-    setEmail("");
-  };
-
-  const quickLinks = [
+  const links = [
     { name: "Home", href: "/" },
     { name: "Packages", href: "/packages" },
     { name: "Destinations", href: "/destinations" },
     { name: "Blogs", href: "/blogs" },
-    { name: "Contact", href: "/contact" }
+    { name: "Contact", href: "/contact" },
   ];
 
-  const popularDestinations = [
+  const destinations = [
     "Goa Beaches",
     "Himachal Pradesh",
     "Kerala Backwaters",
     "Rajasthan Heritage",
-    "Ladakh Adventure"
+    "Ladakh Adventure",
   ];
 
-  const socialLinks = [
-    { name: "Facebook", icon: <Facebook />, href: "#" },
-    { name: "Instagram", icon: <Instagram />, href: "#" },
-    { name: "Twitter", icon: <Twitter />, href: "#" },
-    { name: "LinkedIn", icon: <LinkedIn />, href: "#" }
+  const socials = [
+    { icon: <Facebook size={20} />, href: "#" },
+    { icon: <Instagram size={20} />, href: "#" },
+    { icon: <Twitter size={20} />, href: "#" },
+    { icon: <Linkedin size={20} />, href: "#" },
   ];
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  };
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    alert("Subscribed Successfully!");
+    setEmail("");
+  };
 
   return (
-    <Box
-      component="footer"
-      sx={{
-        background: `linear-gradient(135deg, ${colors.primaryBlue} 0%, ${colors.brightBlue} 100%)`,
-        color: "white",
-        mt: "auto",
-        pt: 8,
-        pb: 4,
-      }}
-    >
-      <Container maxWidth="xl">
+    <footer className="bg-gradient-to-br from-blue-900 to-blue-700 text-white pt-16 pb-8 mt-16 relative overflow-hidden">
 
-        {/* ---------------- GRID CONTENT ---------------- */}
-        <Grid container spacing={6}>
+      {/* Background Overlay */}
+      <div className="absolute inset-0 bg-[url('/footer-pattern.svg')] opacity-10"></div>
 
-          {/* ------ BRAND + SOCIAL ------ */}
-          <Grid item xs={12} md={6} lg={3}>
-            <Stack spacing={3}>
-              {/* Logo */}
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Box
-                  sx={{
-                    width: 55,
-                    height: 55,
-                    borderRadius: "12px",
-                    backgroundColor: colors.accentOrange,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 8px 18px rgba(0,0,0,0.3)"
-                  }}
+      <motion.div
+        initial="hidden"
+        whileInView="show"
+        variants={fadeUp}
+        viewport={{ once: true }}
+        className="max-w-7xl mx-auto px-6 relative z-10"
+      >
+        {/* GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+
+          {/* BRAND */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-14 h-14 rounded-xl bg-orange-500 flex items-center justify-center shadow-xl">
+                <span className="text-xl font-extrabold">BT</span>
+              </div>
+              <h2 className="text-3xl font-extrabold bg-gradient-to-r from-orange-400 to-white bg-clip-text text-transparent">
+                BharatTrip
+              </h2>
+            </div>
+
+            <p className="text-gray-200 leading-relaxed">
+              Explore India like never before — beaches, mountains, culture and adventure.
+              Trusted by over 10,000 travelers.
+            </p>
+
+            {/* SOCIAL ICONS */}
+            <div className="flex gap-3 mt-5">
+              {socials.map((s, i) => (
+                <motion.a
+                  whileHover={{ scale: 1.15 }}
+                  key={i}
+                  href={s.href}
+                  className="p-2 rounded-lg bg-white/10 hover:bg-orange-500 transition text-white"
                 >
-                  <Typography fontWeight="bold" color="white">BT</Typography>
-                </Box>
+                  {s.icon}
+                </motion.a>
+              ))}
+            </div>
+          </div>
 
-                <Typography
-                  variant="h4"
-                  fontWeight="bold"
-                  sx={{
-                    background: `linear-gradient(45deg, ${colors.lightOrange}, white)`,
-                    backgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  BharatTrip
-                </Typography>
-              </Box>
-
-              <Typography color="grey.300">
-                Explore India like never before — beaches, mountains,
-                culture & adventure. Trusted by 10,000+ travelers.
-              </Typography>
-
-              {/* Social Icons */}
-              <Stack direction="row" spacing={1}>
-                {socialLinks.map((social) => (
-                  <IconButton
-                    key={social.name}
-                    href={social.href}
-                    sx={{
-                      color: "white",
-                      backgroundColor: alpha("#fff", 0.12),
-                      "&:hover": {
-                        backgroundColor: colors.accentOrange,
-                        transform: "scale(1.1)"
-                      }
-                    }}
+          {/* QUICK LINKS */}
+          <div>
+            <h3 className="text-xl font-bold mb-4">Quick Links</h3>
+            <ul className="space-y-2">
+              {links.map((l) => (
+                <li key={l.name}>
+                  <Link
+                    href={l.href}
+                    className="text-gray-300 hover:text-white transition flex items-center gap-2"
                   >
-                    {social.icon}
-                  </IconButton>
-                ))}
-              </Stack>
-            </Stack>
-          </Grid>
-
-          {/* ------ QUICK LINKS ------ */}
-          <Grid item xs={6} sm={4} lg={2}>
-            <Typography variant="h6" fontWeight="bold" mb={2}>
-              Quick Links
-            </Typography>
-
-            <Stack spacing={1.4}>
-              {quickLinks.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  underline="none"
-                  color="grey.300"
-                  sx={{
-                    "&:hover": { color: "white", pl: 1 },
-                    transition: "0.25s"
-                  }}
-                >
-                  • {item.name}
-                </Link>
+                    • {l.name}
+                  </Link>
+                </li>
               ))}
-            </Stack>
-          </Grid>
+            </ul>
+          </div>
 
-          {/* ------ POPULAR DESTINATIONS ------ */}
-          <Grid item xs={6} sm={4} lg={2}>
-            <Typography variant="h6" fontWeight="bold" mb={2}>
-              Top Destinations
-            </Typography>
-
-            <Stack spacing={1.4}>
-              {popularDestinations.map((city) => (
-                <Typography
-                  key={city}
-                  color="grey.300"
-                  sx={{ "&:hover": { color: "white", pl: 1 }, transition: "0.25s" }}
-                >
-                  • {city}
-                </Typography>
+          {/* DESTINATIONS */}
+          <div>
+            <h3 className="text-xl font-bold mb-4">Top Destinations</h3>
+            <ul className="space-y-2">
+              {destinations.map((d) => (
+                <li key={d}>
+                  <span className="text-gray-300 hover:text-white transition cursor-pointer">
+                    • {d}
+                  </span>
+                </li>
               ))}
-            </Stack>
-          </Grid>
+            </ul>
+          </div>
 
-          {/* ------ CONTACT & NEWSLETTER ------ */}
-          <Grid item xs={12} sm={12} lg={5}>
-            <Stack spacing={3}>
-              <Typography variant="h6" fontWeight="bold">
-                Contact Us
-              </Typography>
+          {/* CONTACT + NEWSLETTER */}
+          <div>
+            <h3 className="text-xl font-bold mb-4">Contact Us</h3>
 
-              {/* INFO */}
-              <Stack spacing={1.5}>
-                <Box sx={{ display: "flex", gap: 2 }}>
-                  <LocationOn color="warning" />
-                  <Typography color="grey.300">
-                    Kehloor Bhawan Shakti Vihar, Panthghati, 171009
-                  </Typography>
-                </Box>
+            <div className="space-y-4 text-gray-200">
 
-                <Box sx={{ display: "flex", gap: 2 }}>
-                  <Phone color="warning" />
-                  <Stack>
-                    <Link href="tel:+918894322900" color="grey.300" underline="none">
+              <div className="flex gap-3">
+                <MapPin className="text-orange-400" />
+                <p>Kehloor Bhawan Shakti Vihar, Panthghati - 171009</p>
+              </div>
+
+              <div>
+                <div className="flex gap-3">
+                  <Phone className="text-orange-400" />
+                  <div>
+                    <Link href="tel:+918894322900" className="text-gray-200 hover:text-white">
                       +91 88943 22900
                     </Link>
-                    <Link href="tel:+918894323900" color="grey.300" underline="none">
+                    <br />
+                    <Link href="tel:+918894323900" className="text-gray-200 hover:text-white">
                       +91 88943 23900
                     </Link>
-                  </Stack>
-                </Box>
+                  </div>
+                </div>
+              </div>
 
-                <Box sx={{ display: "flex", gap: 2 }}>
-                  <Email color="warning" />
-                  <Link href="mailto:info@bharattrip.net" underline="none" color="grey.300">
-                    info@bharattrip.net
-                  </Link>
-                </Box>
-              </Stack>
+              <div className="flex gap-3">
+                <Mail className="text-orange-400" />
+                <Link href="mailto:info@bharattrip.net" className="text-gray-200 hover:text-white">
+                  info@bharattrip.net
+                </Link>
+              </div>
+            </div>
 
-              {/* NEWSLETTER */}
-              <Paper
-                sx={{
-                  p: 3,
-                  mt: 1,
-                  backgroundColor: alpha("#fff", 0.06),
-                  backdropFilter: "blur(10px)",
-                  borderRadius: 2
-                }}
-              >
-                <Typography variant="subtitle1" fontWeight="bold">
-                  Subscribe for Updates
-                </Typography>
+            {/* Newsletter */}
+            <div className="mt-6 p-4 rounded-2xl bg-white/10 backdrop-blur-lg shadow-xl">
+              <h4 className="font-bold text-white mb-2">Subscribe for Offers</h4>
 
-                <Box component="form" onSubmit={handleSubscribe} sx={{ display: "flex", mt: 2 }}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    placeholder="Enter email"
-                    value={email}
-                    type="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    sx={{
-                      backgroundColor: alpha("#fff", 0.1),
-                      borderRadius: 1,
-                      input: { color: "white" },
-                    }}
-                  />
+              <form onSubmit={handleSubscribe} className="flex items-center">
+                <input
+                  type="email"
+                  required
+                  placeholder="Enter your email"
+                  className="w-full p-3 bg-white/20 text-white placeholder-white rounded-xl outline-none"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
 
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    endIcon={<Send />}
-                    sx={{
-                      ml: 1,
-                      backgroundColor: colors.accentOrange,
-                      "&:hover": { backgroundColor: colors.lightOrange }
-                    }}
-                  >
-                    Go
-                  </Button>
-                </Box>
-              </Paper>
-            </Stack>
-          </Grid>
-        </Grid>
+                <button
+                  type="submit"
+                  className="ml-2 bg-orange-500 hover:bg-orange-600 p-3 rounded-xl text-white shadow-lg"
+                >
+                  <Send size={20} />
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
 
-        {/* BOTTOM STRIP */}
-        <Divider sx={{ my: 4, borderColor: alpha("#fff", 0.2) }} />
+        {/* Divider */}
+        <div className="border-t border-white/20 my-10"></div>
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            justifyContent: "space-between",
-            alignItems: "center",
-            textAlign: { xs: "center", md: "left" },
-            gap: 2
-          }}
-        >
-          <Typography color="grey.300" variant="body2">
-            © 2025 BharatTrip. All Rights Reserved.
-          </Typography>
+        {/* Bottom Strip */}
+        <div className="flex flex-col md:flex-row justify-between items-center text-gray-300 text-sm">
+          <p>© 2025 BharatTrip. All Rights Reserved.</p>
 
-          <Stack direction="row" spacing={3}>
-            {["Privacy Policy", "Terms", "Cookies"].map((x) => (
-              <Link
-                key={x}
-                href="#"
-                underline="none"
-                color="grey.300"
-                sx={{ "&:hover": { color: "white" } }}
-              >
+          <div className="flex gap-5 mt-3 md:mt-0">
+            {["Privacy Policy", "Terms of Use", "Cookies"].map((x) => (
+              <Link key={x} href="#" className="hover:text-white">
                 {x}
               </Link>
             ))}
-          </Stack>
-        </Box>
-      </Container>
+          </div>
+        </div>
 
-      {/* WHATSAPP BUTTON */}
-      <Fab
-        color="success"
-        href="https://wa.me/918894322900"
-        target="_blank"
-        sx={{
-          position: "fixed",
-          bottom: 20,
-          right: 20,
-          animation: "pulse 2s infinite",
-          "@keyframes pulse": {
-            "0%": { transform: "scale(1)" },
-            "50%": { transform: "scale(1.15)" },
-            "100%": { transform: "scale(1)" }
-          }
-        }}
-      >
-        <WhatsApp />
-      </Fab>
-    </Box>
+        {/* Floating WhatsApp */}
+        <Link href="https://wa.me/918894322900" target="_blank">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            whileTap={{ scale: 0.85 }}
+            className="fixed bottom-6 right-6 bg-green-500 p-4 rounded-full shadow-2xl z-50"
+          >
+            <MessageCircle size={30} className="text-white" />
+          </motion.div>
+        </Link>
+
+      </motion.div>
+    </footer>
   );
 }
