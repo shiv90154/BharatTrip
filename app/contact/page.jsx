@@ -2,8 +2,119 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import {
+  ThemeProvider,
+  createTheme,
+  responsiveFontSizes,
+  Container,
+  Grid,
+  Typography,
+  Box,
+  Paper,
+  Card,
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Chip,
+  alpha,
+  useTheme,
+  CircularProgress,
+  Stack,
+  Divider
+} from '@mui/material';
+import {
+  Phone,
+  Email,
+  LocationOn,
+  Chat,
+  Person,
+  LocalPostOffice,
+  Smartphone,
+  Subject,
+  Message,
+  Backpack,
+  Send,
+  CheckCircle,
+  Star
+} from '@mui/icons-material';
+
+// ------------------- THEME CONFIGURATION -------------------
+let theme = createTheme({
+  palette: {
+    primary: {
+      main: '#0C3C8C', // --primary-blue
+      light: '#1D4ED8', // --bright-blue
+    },
+    secondary: {
+      main: '#F97316', // --accent-orange
+      light: '#FB923C', // --light-orange
+    },
+    background: {
+      default: '#F8F9FA', // --bg-light
+    },
+    text: {
+      primary: '#1E293B', // --text-dark
+    },
+  },
+  typography: {
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    h2: {
+      fontWeight: 700,
+    },
+    h4: {
+      fontWeight: 600,
+    },
+    h5: {
+      fontWeight: 500,
+    },
+  },
+  shape: {
+    borderRadius: 12,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          fontWeight: 600,
+          borderRadius: 8,
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 8,
+          },
+        },
+      },
+    },
+  },
+});
+
+theme = responsiveFontSizes(theme);
 
 export default function Contact() {
+  const theme = useTheme();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -48,32 +159,36 @@ export default function Contact() {
 
   const contactMethods = [
     {
-      icon: "📞",
+      icon: <Phone />,
       title: "Call Us",
       details: ["+91-8894322900", "+91-8894323900"],
       action: "Call now",
-      link: "tel:+918894322900"
+      link: "tel:+918894322900",
+      color: theme.palette.primary.main
     },
     {
-      icon: "✉️",
+      icon: <Email />,
       title: "Email Us",
       details: ["info@bharattrip.net", "support@bharattrip.net"],
       action: "Send email",
-      link: "mailto:info@bharattrip.net"
+      link: "mailto:info@bharattrip.net",
+      color: theme.palette.secondary.main
     },
     {
-      icon: "📍",
+      icon: <LocationOn />,
       title: "Visit Us",
       details: ["Kehloor Bhawan Shakti Vihar", "Panthghati, Pin - 171009"],
       action: "Get directions",
-      link: "https://maps.google.com"
+      link: "https://maps.google.com",
+      color: theme.palette.primary.light
     },
     {
-      icon: "💬",
+      icon: <Chat />,
       title: "WhatsApp",
       details: ["Quick responses", "24/7 support"],
       action: "Start chat",
-      link: "https://wa.me/918894322900"
+      link: "https://wa.me/918894322900",
+      color: '#25D366'
     }
   ];
 
@@ -87,265 +202,429 @@ export default function Contact() {
     "Custom Tour"
   ];
 
+  const stats = [
+    { number: "500+", label: "Happy Travelers" },
+    { number: "50+", label: "Destinations" },
+    { number: "24/7", label: "Support" },
+    { number: "5⭐", label: "Rating" }
+  ];
+
+  const faqs = [
+    "How soon will I get a response?",
+    "Do you offer custom tour packages?",
+    "What's included in the package price?",
+    "Can I modify my booking after confirmation?"
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-24 pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header Section */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-blue-100 text-blue-600 px-4 py-2 rounded-full text-sm font-medium mb-4">
-            <span>💬</span>
-            <span>Get in Touch</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Let's Plan Your <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Dream Trip</span>
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Have questions about your next adventure? We're here to help you create unforgettable memories in incredible India.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <ThemeProvider theme={theme}>
+      <Box 
+        sx={{ 
+          minHeight: '100vh',
+          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.03)} 0%, ${alpha(theme.palette.secondary.main, 0.03)} 100%)`,
+          pt: { xs: 16, md: 20 },
+          pb: 8
+        }}
+      >
+        <Container maxWidth="lg">
           
-          {/* Contact Information */}
-          <div className="lg:col-span-1 space-y-6">
-            {contactMethods.map((method, index) => (
-              <div 
-                key={index}
-                className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:border-blue-200"
+          {/* Header Section */}
+          <Box sx={{ textAlign: 'center', mb: 8 }}>
+            <Chip 
+              icon={<Chat />}
+              label="Get in Touch"
+              sx={{ 
+                bgcolor: alpha(theme.palette.primary.main, 0.1),
+                color: theme.palette.primary.main,
+                mb: 3,
+                px: 1
+              }}
+            />
+            
+            <Typography 
+              variant="h2" 
+              sx={{ 
+                fontWeight: 'bold', 
+                mb: 2,
+                fontSize: { xs: '2.5rem', md: '3.5rem' }
+              }}
+            >
+              Let's Plan Your{" "}
+              <Box
+                component="span"
+                sx={{
+                  background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  color: 'transparent',
+                }}
               >
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-xl">{method.icon}</span>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      {method.title}
-                    </h3>
-                    {method.details.map((detail, idx) => (
-                      <p key={idx} className="text-gray-600 text-sm mb-1">
-                        {detail}
-                      </p>
-                    ))}
-                    <Link 
-                      href={method.link}
-                      target="_blank"
-                      className="inline-flex items-center space-x-1 text-blue-600 hover:text-blue-700 font-medium text-sm mt-3 group"
-                    >
-                      <span>{method.action}</span>
-                      <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
+                Dream Trip
+              </Box>
+            </Typography>
+            
+            <Typography 
+              variant="h5" 
+              sx={{ 
+                color: 'text.secondary',
+                maxWidth: 600,
+                mx: 'auto',
+                fontSize: { xs: '1.1rem', md: '1.25rem' }
+              }}
+            >
+              Have questions about your next adventure? We're here to help you create unforgettable memories in incredible India.
+            </Typography>
+          </Box>
 
-            {/* Quick Stats */}
-            <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-6 text-white shadow-xl">
-              <h3 className="text-lg font-semibold mb-4">Why Choose Us?</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold">500+</div>
-                  <div className="text-blue-100 text-sm">Happy Travelers</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">50+</div>
-                  <div className="text-blue-100 text-sm">Destinations</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">24/7</div>
-                  <div className="text-blue-100 text-sm">Support</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">5⭐</div>
-                  <div className="text-blue-100 text-sm">Rating</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Form */}
-          <div className="lg:col-span-2">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
-              
-              {/* Success Message */}
-              {isSubmitted && (
-                <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 text-center">
-                  <div className="text-4xl mb-2">🎉</div>
-                  <h3 className="text-xl font-semibold mb-2">Thank You!</h3>
-                  <p>We've received your message and will get back to you within 24 hours.</p>
-                </div>
-              )}
-
-              <div className="p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Send us a Message
-                </h2>
-                <p className="text-gray-600 mb-6">
-                  Fill out the form below and our travel experts will help you plan the perfect trip.
-                </p>
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Name Field */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700 flex items-center space-x-1">
-                        <span>👤</span>
-                        <span>Full Name *</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                        placeholder="Enter your full name"
-                      />
-                    </div>
-
-                    {/* Email Field */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700 flex items-center space-x-1">
-                        <span>📧</span>
-                        <span>Email Address *</span>
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                        placeholder="your.email@example.com"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Phone Field */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700 flex items-center space-x-1">
-                        <span>📱</span>
-                        <span>Phone Number</span>
-                      </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                        placeholder="+91 00000 00000"
-                      />
-                    </div>
-
-                    {/* Package Field */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700 flex items-center space-x-1">
-                        <span>🎒</span>
-                        <span>Interested Package</span>
-                      </label>
-                      <select
-                        name="package"
-                        value={formData.package}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                      >
-                        <option value="">Select a package</option>
-                        {packages.map((pkg, index) => (
-                          <option key={index} value={pkg}>{pkg}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Subject Field */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 flex items-center space-x-1">
-                      <span>📝</span>
-                      <span>Subject *</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                      placeholder="What's this regarding?"
-                    />
-                  </div>
-
-                  {/* Message Field */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 flex items-center space-x-1">
-                      <span>💭</span>
-                      <span>Your Message *</span>
-                    </label>
-                    <textarea
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      rows={6}
-                      className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
-                      placeholder="Tell us about your dream vacation, preferences, and any special requirements..."
-                    />
-                  </div>
-
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-300 transform hover:scale-105 ${
-                      isSubmitting 
-                        ? 'bg-gray-400 cursor-not-allowed' 
-                        : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-xl'
-                    }`}
+          <Grid container spacing={4}>
+            
+            {/* Contact Information */}
+            <Grid item xs={12} lg={4}>
+              <Stack spacing={3}>
+                {contactMethods.map((method, index) => (
+                  <Card 
+                    key={index}
+                    sx={{ 
+                      p: 3,
+                      transition: 'all 0.3s ease',
+                      border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                      '&:hover': {
+                        transform: 'translateY(-4px)',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+                        borderColor: alpha(theme.palette.primary.main, 0.3)
+                      }
+                    }}
                   >
-                    {isSubmitting ? (
-                      <div className="flex items-center justify-center space-x-2">
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        <span>Processing...</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center space-x-2">
-                        <span>🚀</span>
-                        <span>Send Message</span>
-                      </div>
-                    )}
-                  </button>
-
-                  <p className="text-center text-gray-500 text-sm">
-                    We typically respond within 2-4 hours during business hours.
-                  </p>
-                </form>
-              </div>
-            </div>
-
-            {/* FAQ Section */}
-            <div className="mt-8 bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-                <span>❓</span>
-                <span>Frequently Asked Questions</span>
-              </h3>
-              <div className="space-y-3">
-                {[
-                  "How soon will I get a response?",
-                  "Do you offer custom tour packages?",
-                  "What's included in the package price?",
-                  "Can I modify my booking after confirmation?"
-                ].map((faq, index) => (
-                  <div key={index} className="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition-colors duration-200">
-                    <span className="text-blue-500">•</span>
-                    <span className="text-sm">{faq}</span>
-                  </div>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+                      <Box
+                        sx={{
+                          width: 50,
+                          height: 50,
+                          borderRadius: 2,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          bgcolor: alpha(method.color, 0.1),
+                          color: method.color,
+                          flexShrink: 0
+                        }}
+                      >
+                        {method.icon}
+                      </Box>
+                      
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="h6" fontWeight="bold" gutterBottom>
+                          {method.title}
+                        </Typography>
+                        
+                        {method.details.map((detail, idx) => (
+                          <Typography 
+                            key={idx} 
+                            variant="body2" 
+                            color="text.secondary"
+                            sx={{ mb: 0.5 }}
+                          >
+                            {detail}
+                          </Typography>
+                        ))}
+                        
+                        <Link 
+                          href={method.link}
+                          target="_blank"
+                          style={{ textDecoration: 'none' }}
+                        >
+                          <Button
+                            variant="text"
+                            sx={{ 
+                              mt: 1,
+                              color: method.color,
+                              fontWeight: 600,
+                              px: 0,
+                              '&:hover': {
+                                backgroundColor: 'transparent',
+                                transform: 'translateX(4px)'
+                              },
+                              transition: 'all 0.2s ease'
+                            }}
+                          >
+                            {method.action}
+                          </Button>
+                        </Link>
+                      </Box>
+                    </Box>
+                  </Card>
                 ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
+                {/* Quick Stats */}
+                <Card 
+                  sx={{ 
+                    background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+                    color: 'white',
+                    p: 4
+                  }}
+                >
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
+                    Why Choose Us?
+                  </Typography>
+                  
+                  <Grid container spacing={2} sx={{ mt: 1 }}>
+                    {stats.map((stat, index) => (
+                      <Grid item xs={6} key={index}>
+                        <Box sx={{ textAlign: 'center' }}>
+                          <Typography variant="h5" fontWeight="bold">
+                            {stat.number}
+                          </Typography>
+                          <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                            {stat.label}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Card>
+              </Stack>
+            </Grid>
+
+            {/* Contact Form */}
+            <Grid item xs={12} lg={8}>
+              <Card 
+                sx={{ 
+                  background: alpha('#fff', 0.8),
+                  backdropFilter: 'blur(20px)',
+                  overflow: 'hidden'
+                }}
+              >
+                {/* Success Message */}
+                {isSubmitted && (
+                  <Box
+                    sx={{
+                      background: `linear-gradient(135deg, #4CAF50 0%, #45a049 100%)`,
+                      color: 'white',
+                      p: 4,
+                      textAlign: 'center'
+                    }}
+                  >
+                    <CheckCircle sx={{ fontSize: 48, mb: 2 }} />
+                    <Typography variant="h5" fontWeight="bold" gutterBottom>
+                      Thank You!
+                    </Typography>
+                    <Typography>
+                      We've received your message and will get back to you within 24 hours.
+                    </Typography>
+                  </Box>
+                )}
+
+                <Box sx={{ p: { xs: 3, md: 4 } }}>
+                  <Typography variant="h4" fontWeight="bold" gutterBottom>
+                    Send us a Message
+                  </Typography>
+                  
+                  <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+                    Fill out the form below and our travel experts will help you plan the perfect trip.
+                  </Typography>
+
+                  <form onSubmit={handleSubmit}>
+                    <Grid container spacing={3}>
+                      {/* Name Field */}
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          fullWidth
+                          label="Full Name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          required
+                          InputProps={{
+                            startAdornment: <Person sx={{ color: 'text.secondary', mr: 1 }} />
+                          }}
+                          placeholder="Enter your full name"
+                        />
+                      </Grid>
+
+                      {/* Email Field */}
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          fullWidth
+                          label="Email Address"
+                          name="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          required
+                          InputProps={{
+                            startAdornment: <LocalPostOffice sx={{ color: 'text.secondary', mr: 1 }} />
+                          }}
+                          placeholder="your.email@example.com"
+                        />
+                      </Grid>
+
+                      {/* Phone Field */}
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          fullWidth
+                          label="Phone Number"
+                          name="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={handleChange}
+                          InputProps={{
+                            startAdornment: <Smartphone sx={{ color: 'text.secondary', mr: 1 }} />
+                          }}
+                          placeholder="+91 00000 00000"
+                        />
+                      </Grid>
+
+                      {/* Package Field */}
+                      <Grid item xs={12} md={6}>
+                        <FormControl fullWidth>
+                          <InputLabel>Interested Package</InputLabel>
+                          <Select
+                            name="package"
+                            value={formData.package}
+                            onChange={handleChange}
+                            label="Interested Package"
+                            startAdornment={<Backpack sx={{ color: 'text.secondary', mr: 1 }} />}
+                          >
+                            <MenuItem value="">
+                              <em>Select a package</em>
+                            </MenuItem>
+                            {packages.map((pkg, index) => (
+                              <MenuItem key={index} value={pkg}>{pkg}</MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+
+                      {/* Subject Field */}
+                      <Grid item xs={12}>
+                        <TextField
+                          fullWidth
+                          label="Subject"
+                          name="subject"
+                          value={formData.subject}
+                          onChange={handleChange}
+                          required
+                          InputProps={{
+                            startAdornment: <Subject sx={{ color: 'text.secondary', mr: 1 }} />
+                          }}
+                          placeholder="What's this regarding?"
+                        />
+                      </Grid>
+
+                      {/* Message Field */}
+                      <Grid item xs={12}>
+                        <TextField
+                          fullWidth
+                          label="Your Message"
+                          name="message"
+                          value={formData.message}
+                          onChange={handleChange}
+                          required
+                          multiline
+                          rows={6}
+                          InputProps={{
+                            startAdornment: <Message sx={{ color: 'text.secondary', mr: 1, mt: 1, alignSelf: 'flex-start' }} />
+                          }}
+                          placeholder="Tell us about your dream vacation, preferences, and any special requirements..."
+                        />
+                      </Grid>
+
+                      {/* Submit Button */}
+                      <Grid item xs={12}>
+                        <Button
+                          type="submit"
+                          disabled={isSubmitting}
+                          variant="contained"
+                          size="large"
+                          fullWidth
+                          sx={{
+                            py: 2,
+                            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+                            fontSize: '1.1rem',
+                            '&:hover': {
+                              transform: 'translateY(-2px)',
+                              boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+                            },
+                            transition: 'all 0.3s ease',
+                          }}
+                        >
+                          {isSubmitting ? (
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <CircularProgress size={20} color="inherit" />
+                              Processing...
+                            </Box>
+                          ) : (
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Send />
+                              Send Message
+                            </Box>
+                          )}
+                        </Button>
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <Typography 
+                          variant="body2" 
+                          color="text.secondary" 
+                          textAlign="center"
+                        >
+                          We typically respond within 2-4 hours during business hours.
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </form>
+                </Box>
+              </Card>
+
+              {/* FAQ Section */}
+              <Card 
+                sx={{ 
+                  mt: 3,
+                  p: 3,
+                  background: alpha('#fff', 0.8),
+                  backdropFilter: 'blur(20px)'
+                }}
+              >
+                <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Star color="primary" />
+                  Frequently Asked Questions
+                </Typography>
+                
+                <Stack spacing={2} sx={{ mt: 2 }}>
+                  {faqs.map((faq, index) => (
+                    <Box 
+                      key={index}
+                      sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: 2,
+                        color: 'text.secondary',
+                        transition: 'color 0.2s ease',
+                        '&:hover': {
+                          color: 'text.primary'
+                        }
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 6,
+                          height: 6,
+                          borderRadius: '50%',
+                          bgcolor: theme.palette.primary.main,
+                          flexShrink: 0
+                        }}
+                      />
+                      <Typography variant="body2">
+                        {faq}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Stack>
+              </Card>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 }

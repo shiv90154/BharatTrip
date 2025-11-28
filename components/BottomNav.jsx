@@ -8,7 +8,6 @@ import { useState, useEffect } from "react";
 export default function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
-  const [value, setValue] = useState(0);
 
   const tabs = [
     { label: "Home", icon: <Home />, href: "/" },
@@ -18,10 +17,7 @@ export default function BottomNav() {
     { label: "Contact", icon: <ContactMail />, href: "/contact" }
   ];
 
-  useEffect(() => {
-    const index = tabs.findIndex((t) => t.href === pathname);
-    setValue(index !== -1 ? index : 0);
-  }, [pathname]);
+  const value = tabs.findIndex((t) => t.href === pathname);
 
   return (
     <Paper
@@ -37,13 +33,8 @@ export default function BottomNav() {
     >
       <BottomNavigation
         showLabels
-        value={value}
+        value={value !== -1 ? value : 0}
         onChange={(e, newValue) => router.push(tabs[newValue].href)}
-        sx={{
-          "& .Mui-selected": {
-            color: "#F97316",
-          }
-        }}
       >
         {tabs.map((t, i) => (
           <BottomNavigationAction key={i} label={t.label} icon={t.icon} />

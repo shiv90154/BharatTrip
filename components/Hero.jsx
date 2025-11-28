@@ -1,9 +1,14 @@
+import Image from "next/image";
+
 export default function Hero() {
   return (
     <div className="relative h-[80vh]">
-      <img
+      <Image
         src="/hero.jpg"
-        className="w-full h-full object-cover brightness-75"
+        alt="Scenic view of India"
+        fill
+        className="object-cover brightness-75"
+        priority
       />
 
       <div className="absolute inset-0 flex flex-col justify-center items-center text-white text-center">
