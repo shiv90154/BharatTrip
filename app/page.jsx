@@ -746,53 +746,190 @@ export default function Home() {
       </section>
 
       {/* ================== WHY CHOOSE US ================== */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          {/* Heading */}
-          <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
-              Why Choose Bharat Trip?
-            </h2>
-            <p className="text-gray-500 mt-2">
-              We bring unforgettable travel experiences with top-notch services.
+    <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-blue-50/30">
+  <div className="max-w-7xl mx-auto px-4">
+    {/* Enhanced Heading */}
+    <motion.div 
+      className="text-center mb-16"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+    >
+      <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+        <span>✨</span>
+        Why Travel With Us
+      </div>
+      <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
+        Why Choose Bharat Trip?
+      </h2>
+      <p className="text-gray-600 text-lg mt-4 max-w-2xl mx-auto leading-relaxed">
+        We're committed to making your Indian travel experience unforgettable with 
+        premium services, local expertise, and unmatched hospitality.
+      </p>
+    </motion.div>
+
+    {/* Enhanced Feature Grid */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {[
+        { 
+          icon: "🏆", 
+          title: "Award Winning Service", 
+          desc: "Recognized as India's Best Travel Agency 2023 with 50,000+ happy travelers",
+          gradient: "from-yellow-50 to-orange-50",
+          border: "border-yellow-200",
+          iconBg: "bg-gradient-to-br from-yellow-400 to-orange-400"
+        },
+        { 
+          icon: "🛡️", 
+          title: "Safe & Secure", 
+          desc: "Your safety is our top priority with 24/7 emergency support and verified partners",
+          gradient: "from-green-50 to-emerald-50",
+          border: "border-green-200",
+          iconBg: "bg-gradient-to-br from-green-500 to-emerald-500"
+        },
+        { 
+          icon: "💎", 
+          title: "Best Value", 
+          desc: "Premium experiences at unbeatable prices with no hidden charges guaranteed",
+          gradient: "from-blue-50 to-cyan-50",
+          border: "border-blue-200",
+          iconBg: "bg-gradient-to-br from-blue-500 to-cyan-500"
+        },
+        { 
+          icon: "🌙", 
+          title: "24/7 Support", 
+          desc: "Round-the-clock customer care in multiple languages for seamless travel",
+          gradient: "from-purple-50 to-pink-50",
+          border: "border-purple-200",
+          iconBg: "bg-gradient-to-br from-purple-500 to-pink-500"
+        },
+        { 
+          icon: "🧭", 
+          title: "Expert Local Guides", 
+          desc: "Certified local guides with deep cultural knowledge and storytelling skills",
+          gradient: "from-red-50 to-rose-50",
+          border: "border-red-200",
+          iconBg: "bg-gradient-to-br from-red-500 to-rose-500"
+        },
+        { 
+          icon: "🏨", 
+          title: "Curated Stays", 
+          desc: "Handpicked accommodations blending comfort, culture, and authentic experiences",
+          gradient: "from-indigo-50 to-violet-50",
+          border: "border-indigo-200",
+          iconBg: "bg-gradient-to-br from-indigo-500 to-violet-500"
+        }
+      ].map((item, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, y: 40, scale: 0.95 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          whileHover={{ 
+            y: -8,
+            scale: 1.02,
+            transition: { duration: 0.3 }
+          }}
+          transition={{ 
+            duration: 0.6, 
+            delay: i * 0.1,
+            type: "spring",
+            stiffness: 100
+          }}
+          viewport={{ once: true, margin: "-50px" }}
+          className={`relative p-8 rounded-3xl bg-gradient-to-br ${item.gradient} border ${item.border} 
+                     shadow-sm hover:shadow-2xl transition-all duration-500 group overflow-hidden`}
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent opacity-50"></div>
+          
+          {/* Animated Border Effect */}
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-white/50 to-transparent 
+                         opacity-0 group-hover:opacity-100 transition-opacity duration-700 -translate-x-full group-hover:translate-x-full">
+          </div>
+
+          {/* Icon Container */}
+          <motion.div 
+            className={`relative w-16 h-16 ${item.iconBg} rounded-2xl flex items-center justify-center 
+                       text-white text-2xl mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300`}
+            whileHover={{ 
+              rotate: [0, -5, 5, 0],
+              transition: { duration: 0.5 }
+            }}
+          >
+            {item.icon}
+          </motion.div>
+
+          {/* Content */}
+          <div className="relative">
+            <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-gray-900 transition-colors">
+              {item.title}
+            </h3>
+            <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+              {item.desc}
             </p>
           </div>
 
-          {/* Feature List */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-            {[
-              { icon: "🏆", title: "Award Winning", desc: "Best travel agency 2023" },
-              { icon: "🔒", title: "Safe & Secure", desc: "Your safety is our priority" },
-              { icon: "💰", title: "Best Prices", desc: "No hidden charges" },
-              { icon: "📞", title: "24/7 Support", desc: "We're here anytime" },
-              { icon: "🧭", title: "Expert Guides", desc: "Professional local guides" },
-              { icon: "🏨", title: "Quality Stays", desc: "Comfortable accommodations" }
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: i * 0.15 }}
-                viewport={{ once: true }}
-                className="p-6 rounded-2xl border bg-gray-50 hover:shadow-lg transition-all text-center"
-              >
-                {/* Icon */}
-                <div className="text-4xl mb-3">{item.icon}</div>
+          {/* Hover Indicator */}
+          <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+            <div className="w-8 h-8 bg-white/80 rounded-full flex items-center justify-center shadow-md">
+              <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </div>
 
-                {/* Title */}
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  {item.title}
-                </h3>
-
-                {/* Description */}
-                <p className="text-gray-600 text-sm">
-                  {item.desc}
-                </p>
-              </motion.div>
-            ))}
+    {/* Stats Section */}
+    <motion.div 
+      className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: 0.3 }}
+    >
+      {[
+        { number: "50K+", label: "Happy Travelers" },
+        { number: "500+", label: "Destinations" },
+        { number: "24/7", label: "Support" },
+        { number: "98%", label: "Satisfaction Rate" }
+      ].map((stat, index) => (
+        <div key={index} className="p-6">
+          <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            {stat.number}
+          </div>
+          <div className="text-gray-600 text-sm mt-2 font-medium">
+            {stat.label}
           </div>
         </div>
-      </section>
+      ))}
+    </motion.div>
+
+    {/* CTA Button */}
+    <motion.div 
+      className="text-center mt-12"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: 0.5 }}
+    >
+      <button className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 
+                        text-white px-8 py-4 rounded-2xl font-semibold shadow-lg hover:shadow-xl 
+                        transform hover:scale-105 transition-all duration-300 group">
+        <span>Start Your Journey</span>
+        <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </button>
+      
+      <p className="text-gray-500 text-sm mt-4">
+        Join 50,000+ travelers who trusted us with their Indian adventures
+      </p>
+    </motion.div>
+  </div>
+</section>
 
       {/* ================== NEWSLETTER SECTION ================== */}
       <section className="py-20">
