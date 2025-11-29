@@ -1,9 +1,9 @@
 "use client";
-export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { Search, Filter, MapPin, Calendar, Users, Star, Heart, ChevronDown, X, Sparkles } from "lucide-react";
 
 // ---------------------------------------------
 // 🎯 ENHANCED DESTINATION CARD
@@ -19,145 +19,117 @@ function DestinationCard({ data, index }) {
       transition={{ duration: 0.6, delay: index * 0.1 }}
       viewport={{ once: true }}
       whileHover={{ y: -8, scale: 1.02 }}
-      className="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100"
+      className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100"
     >
-      {/* Image / Icon Section with Gradient */}
-      <div className="relative h-72 bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 flex items-center justify-center">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-4 left-4 w-12 h-12 bg-blue-500 rounded-full"></div>
-          <div className="absolute bottom-4 right-4 w-8 h-8 bg-purple-500 rounded-full"></div>
-          <div className="absolute top-1/2 left-1/3 w-6 h-6 bg-pink-500 rounded-full"></div>
-        </div>
+      {/* Image Section */}
+      <div className="relative h-64 overflow-hidden">
+        <img
+          src={data.image}
+          alt={data.title}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+        />
         
-        {/* Main Icon */}
-        <motion.div
-          whileHover={{ scale: 1.1, rotate: 5 }}
-          className="relative z-10 text-8xl"
-        >
-          {data.icon}
-        </motion.div>
-
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
 
         {/* Top Badges */}
         <div className="absolute top-4 left-4 flex gap-2">
-          <span className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-2xl text-sm font-semibold shadow-lg flex items-center gap-1">
-            ⭐ {data.rating}
-          </span>
           {data.featured && (
-            <span className="bg-yellow-500 text-white px-4 py-2 rounded-2xl text-sm font-semibold shadow-lg flex items-center gap-1">
-              ✨ Featured
+            <span className="bg-rose-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg flex items-center gap-1">
+              <Sparkles size={12} />
+              Featured
             </span>
           )}
+          <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold shadow-lg flex items-center gap-1">
+            <Star size={12} className="fill-amber-400 text-amber-400" />
+            {data.rating}
+          </span>
         </div>
 
         {/* Price Badge */}
         <div className="absolute top-4 right-4">
-          <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-5 py-3 rounded-2xl shadow-lg">
-            <div className="text-xs opacity-90">Starting from</div>
-            <div className="text-xl font-bold">₹{data.price}</div>
+          <div className="bg-gradient-to-r from-rose-600 to-orange-600 text-white px-4 py-2 rounded-2xl shadow-lg text-center">
+            <div className="text-xs opacity-90">From</div>
+            <div className="text-lg font-bold">₹{data.price}</div>
           </div>
         </div>
 
-        {/* Hover Actions */}
+        {/* Action Buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           whileHover={{ opacity: 1, y: 0 }}
-          className="absolute bottom-4 left-4 right-4 flex justify-between opacity-0 group-hover:opacity-100 transition duration-300"
+          className="absolute top-16 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition duration-300"
         >
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsLiked(!isLiked)}
-            className={`p-3 rounded-2xl backdrop-blur-sm border ${
+            className={`p-2 rounded-full backdrop-blur-sm border ${
               isLiked 
-                ? "bg-red-500 text-white border-red-500" 
+                ? "bg-rose-500 text-white border-rose-500" 
                 : "bg-white/20 text-white border-white/30"
             }`}
           >
-            {isLiked ? "❤️" : "🤍"}
-          </motion.button>
-          
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setIsSaved(!isSaved)}
-            className={`p-3 rounded-2xl backdrop-blur-sm border ${
-              isSaved 
-                ? "bg-blue-500 text-white border-blue-500" 
-                : "bg-white/20 text-white border-white/30"
-            }`}
-          >
-            {isSaved ? "📌" : "📍"}
+            <Heart size={16} className={isLiked ? "fill-current" : ""} />
           </motion.button>
         </motion.div>
 
-        {/* Quick View Button */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileHover={{ opacity: 1, scale: 1 }}
-          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300"
-        >
-          <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 border border-white/30">
-            <span className="text-white font-semibold text-lg">Quick View 👀</span>
-          </div>
-        </motion.div>
+        {/* Location Badge */}
+        <div className="absolute bottom-4 left-4">
+          <span className="bg-black/70 text-white px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm flex items-center gap-1">
+            <MapPin size={12} />
+            {data.region}
+          </span>
+        </div>
       </div>
 
       {/* Content Section */}
       <div className="p-6">
-        {/* Header with Title and Flag */}
+        {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <Link href={`/destinations/${data.slug}`}>
-            <h3 className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300 line-clamp-1">
+            <h3 className="text-xl font-bold text-gray-900 group-hover:text-rose-600 transition-colors duration-300 line-clamp-1">
               {data.title}
             </h3>
           </Link>
-          <motion.div
-            whileHover={{ scale: 1.2, rotate: 10 }}
-            className="text-3xl"
-          >
-            {data.flag}
-          </motion.div>
         </div>
 
         {/* Description */}
-        <p className="text-gray-600 leading-relaxed mb-4 line-clamp-2">
+        <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-2">
           {data.description}
         </p>
 
         {/* Stats */}
-        <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+        <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
           <div className="flex items-center gap-1">
-            <span className="text-lg">⏱️</span>
-            <span className="font-semibold">{data.duration}</span>
+            <Calendar size={14} />
+            <span className="font-medium">{data.duration}</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-lg">👥</span>
-            <span className="font-semibold">{data.groupSize}</span>
+            <Users size={14} />
+            <span className="font-medium">{data.groupSize}</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-lg">🌡️</span>
-            <span className="font-semibold">{data.temperature}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="text-lg">🏷️</span>
-            <span className="font-semibold">{data.category}</span>
+            <span className="text-sm">🌡️</span>
+            <span className="font-medium">{data.temperature}</span>
           </div>
         </div>
 
         {/* Highlights */}
         <div className="flex flex-wrap gap-2 mb-6">
-          {data.highlights.map((highlight, idx) => (
+          {data.highlights.slice(0, 3).map((highlight, idx) => (
             <span
               key={idx}
-              className="px-3 py-1 bg-gradient-to-r from-blue-50 to-purple-50 text-gray-700 rounded-xl text-xs font-medium border border-blue-100"
+              className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium"
             >
               {highlight}
             </span>
           ))}
+          {data.highlights.length > 3 && (
+            <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
+              +{data.highlights.length - 3}
+            </span>
+          )}
         </div>
 
         {/* CTA Button */}
@@ -165,11 +137,11 @@ function DestinationCard({ data, index }) {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3 group"
+            className="w-full bg-rose-600 hover:bg-rose-700 text-white py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 group"
           >
             Explore Destination
             <motion.span
-              animate={{ x: [0, 5, 0] }}
+              animate={{ x: [0, 4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             >
               →
@@ -184,90 +156,116 @@ function DestinationCard({ data, index }) {
 // ---------------------------------------------
 // 🎯 ENHANCED FILTER SECTION
 // ---------------------------------------------
-function FilterSection({ filters, activeFilter, onFilterChange, searchTerm, onSearchChange, sortBy, onSortChange, resultsCount }) {
+function FilterSection({ 
+  filters, 
+  activeFilter, 
+  onFilterChange, 
+  searchTerm, 
+  onSearchChange, 
+  sortBy, 
+  onSortChange, 
+  resultsCount,
+  showFilters,
+  setShowFilters 
+}) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="bg-white/90 backdrop-blur-xl p-8 mb-12 rounded-3xl shadow-2xl border border-white/20"
-    >
-      <div className="flex flex-col lg:flex-row items-center gap-8">
-        
-        {/* Search Bar */}
-        <div className="flex-1 w-full relative">
-          <input
-            type="text"
-            placeholder="🔍 Search destinations, activities, or locations..."
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full py-5 px-14 rounded-2xl bg-gray-50/80 border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-200 outline-none transition-all duration-300 text-lg placeholder-gray-500"
-          />
-          <div className="absolute left-5 top-1/2 -translate-y-1/2 text-2xl text-gray-400">
-            🌍
+    <>
+      {/* Mobile Filter Button */}
+      <div className="lg:hidden mb-6">
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => setShowFilters(!showFilters)}
+          className="w-full py-4 bg-white border border-gray-200 rounded-2xl shadow-sm flex items-center justify-center gap-3 font-semibold text-gray-700"
+        >
+          <Filter size={20} />
+          Filters & Sorting
+          <ChevronDown size={16} className={`transform transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+        </motion.button>
+      </div>
+
+      {/* Main Filter Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className={`bg-white rounded-3xl shadow-lg border border-gray-100 p-6 mb-8 ${showFilters ? 'block' : 'hidden lg:block'}`}
+      >
+        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
+          
+          {/* Search Bar */}
+          <div className="flex-1 w-full relative">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Search destinations, activities, or experiences..."
+                value={searchTerm}
+                onChange={(e) => onSearchChange(e.target.value)}
+                className="w-full py-4 pl-12 pr-4 rounded-2xl bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-rose-400 focus:border-rose-400 outline-none transition-all duration-300 text-gray-700 placeholder-gray-500"
+              />
+            </div>
+          </div>
+
+          {/* Filters */}
+          <div className="flex flex-wrap gap-2">
+            {filters.map((filter) => (
+              <motion.button
+                key={filter.id}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => onFilterChange(filter.id)}
+                className={`px-4 py-3 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${
+                  activeFilter === filter.id
+                    ? "bg-rose-600 text-white shadow-lg shadow-rose-500/25"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-transparent"
+                }`}
+              >
+                <span className="text-lg">{filter.icon}</span>
+                <span className="text-sm">{filter.label}</span>
+                {filter.count && (
+                  <span className={`px-2 py-1 rounded-full text-xs ${
+                    activeFilter === filter.id ? "bg-white/20" : "bg-gray-200"
+                  }`}>
+                    {filter.count}
+                  </span>
+                )}
+              </motion.button>
+            ))}
+          </div>
+
+          {/* Sort Dropdown */}
+          <div className="relative">
+            <select
+              value={sortBy}
+              onChange={(e) => onSortChange(e.target.value)}
+              className="pl-4 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:border-rose-400 outline-none transition-all duration-300 appearance-none font-medium text-gray-700"
+            >
+              <option value="featured">Featured</option>
+              <option value="rating">Highest Rated</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="popular">Most Popular</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-3 justify-center">
-          {filters.map((filter) => (
-            <motion.button
-              key={filter.id}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => onFilterChange(filter.id)}
-              className={`px-6 py-4 rounded-2xl font-semibold transition-all duration-300 flex items-center gap-3 ${
-                activeFilter === filter.id
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25"
-                  : "bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-600 border-2 border-transparent hover:border-blue-200"
-              }`}
-            >
-              <span className="text-xl">{filter.icon}</span>
-              <span>{filter.label}</span>
-              {filter.count && (
-                <span className={`px-2 py-1 rounded-full text-xs ${
-                  activeFilter === filter.id ? "bg-white/20" : "bg-gray-200"
-                }`}>
-                  {filter.count}
-                </span>
-              )}
-            </motion.button>
-          ))}
-        </div>
-
-        {/* Sort Dropdown */}
-        <div className="relative">
-          <select
-            value={sortBy}
-            onChange={(e) => onSortChange(e.target.value)}
-            className="px-6 py-4 bg-gray-50/80 border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-200 outline-none transition-all duration-300 appearance-none pr-12 font-medium"
-          >
-            <option value="featured">✨ Featured</option>
-            <option value="rating">⭐ Highest Rated</option>
-            <option value="price-low">💰 Price: Low to High</option>
-            <option value="price-high">💰 Price: High to Low</option>
-            <option value="popular">🔥 Most Popular</option>
-          </select>
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
-            ⬇️
+        {/* Results Count */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex justify-between items-center mt-6 pt-6 border-t border-gray-200"
+        >
+          <span className="text-gray-700 font-medium text-sm">
+            Found <span className="text-rose-600 font-bold">{resultsCount}</span> destinations
           </span>
-        </div>
-      </div>
-
-      {/* Results Count */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex justify-between items-center mt-6 pt-6 border-t border-gray-200"
-      >
-        <span className="text-gray-700 font-semibold">
-          Found <span className="text-blue-600 text-xl">{resultsCount}</span> amazing destinations
-        </span>
-        <span className="text-gray-500 text-sm">
-          {activeFilter !== 'all' && `in ${filters.find(f => f.id === activeFilter)?.label}`}
-        </span>
+          <span className="text-gray-500 text-xs">
+            {activeFilter !== 'all' && `in ${filters.find(f => f.id === activeFilter)?.label}`}
+          </span>
+        </motion.div>
       </motion.div>
-    </motion.div>
+    </>
   );
 }
 
@@ -281,58 +279,43 @@ export default function Destinations() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("featured");
   const [loading, setLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
 
-  // ENHANCED FILTER TYPES WITH COUNTS
+  // Enhanced filters with better categories
   const filters = [
-    { id: "all", label: "All Destinations", icon: "🌍", count: 12 },
-    { id: "adventure", label: "Adventure", icon: "⛰️", count: 4 },
-    { id: "beach", label: "Beach", icon: "🏖️", count: 3 },
+    { id: "all", label: "All", icon: "🌍", count: 12 },
+    { id: "mountain", label: "Mountains", icon: "⛰️", count: 4 },
+    { id: "beach", label: "Beaches", icon: "🏖️", count: 3 },
     { id: "cultural", label: "Cultural", icon: "🏛️", count: 3 },
-    { id: "hills", label: "Hill Stations", icon: "🏔️", count: 4 },
-    { id: "wildlife", label: "Wildlife", icon: "🐘", count: 2 },
+    { id: "adventure", label: "Adventure", icon: "🚵", count: 4 },
     { id: "spiritual", label: "Spiritual", icon: "🛕", count: 2 }
   ];
 
-  // ENHANCED SAMPLE DATA
+  // Enhanced sample data with real images
   const sampleDestinations = [
     {
       title: "Kashmir - Paradise on Earth",
       slug: "kashmir",
-      icon: "🏔️",
-      flag: "🇮🇳",
+      image: "https://images.unsplash.com/photo-1571624436279-b272aff752b5?w=500",
+      region: "Jammu & Kashmir",
       rating: "4.8",
       price: "12,999",
-      description: "Experience the breathtaking beauty of snow-capped peaks, serene Dal Lake, and enchanting Mughal gardens in the crown jewel of India.",
+      description: "Experience the breathtaking beauty of snow-capped peaks, serene Dal Lake, and enchanting Mughal gardens.",
       duration: "5-7 Days",
       groupSize: "2-12 People",
       temperature: "15°C",
-      category: "hills",
+      category: "mountain",
       featured: true,
       highlights: ["Houseboat Stay", "Skiing", "Shikara Ride", "Mughal Gardens"]
     },
     {
-      title: "Manali - Adventure Capital",
-      slug: "manali",
-      icon: "⛷️",
-      flag: "🇮🇳",
-      rating: "4.6",
-      price: "8,999",
-      description: "Thrilling adventures await in the Himalayas with skiing, trekking, paragliding, and breathtaking mountain views.",
-      duration: "4-6 Days",
-      groupSize: "2-8 People",
-      temperature: "12°C",
-      category: "adventure",
-      featured: true,
-      highlights: ["Skiing", "Trekking", "Paragliding", "Hot Springs"]
-    },
-    {
-      title: "Goa - Beach Paradise",
+      title: "Goa Beach Paradise",
       slug: "goa",
-      icon: "🏖️",
-      flag: "🇮🇳",
+      image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=500",
+      region: "Goa",
       rating: "4.5",
       price: "7,999",
-      description: "Sun-kissed beaches, vibrant nightlife, Portuguese heritage, and delicious seafood await in India's party capital.",
+      description: "Sun-kissed beaches, vibrant nightlife, Portuguese heritage, and delicious seafood.",
       duration: "3-5 Days",
       groupSize: "2-10 People",
       temperature: "28°C",
@@ -341,13 +324,28 @@ export default function Destinations() {
       highlights: ["Beach Parties", "Water Sports", "Portuguese Architecture", "Seafood"]
     },
     {
-      title: "Kerala - God's Own Country",
+      title: "Manali Adventure",
+      slug: "manali",
+      image: "https://images.unsplash.com/photo-1574362849221-71cad6d6fb34?w=500",
+      region: "Himachal Pradesh",
+      rating: "4.6",
+      price: "8,999",
+      description: "Thrilling adventures in the Himalayas with skiing, trekking, and breathtaking mountain views.",
+      duration: "4-6 Days",
+      groupSize: "2-8 People",
+      temperature: "12°C",
+      category: "adventure",
+      featured: true,
+      highlights: ["Skiing", "Trekking", "Paragliding", "Hot Springs"]
+    },
+    {
+      title: "Kerala Backwaters",
       slug: "kerala",
-      icon: "🛶",
-      flag: "🇮🇳",
+      image: "https://images.unsplash.com/photo-1580619305218-8423a7ef79b4?w=500",
+      region: "Kerala",
       rating: "4.7",
       price: "11,999",
-      description: "Cruise through tranquil backwaters, explore lush tea plantations, and experience rich cultural traditions in tropical paradise.",
+      description: "Cruise through tranquil backwaters, explore lush tea plantations, and experience rich cultural traditions.",
       duration: "6-8 Days",
       groupSize: "2-6 People",
       temperature: "26°C",
@@ -356,13 +354,13 @@ export default function Destinations() {
       highlights: ["Houseboat Cruise", "Ayurveda", "Tea Gardens", "Kathakali"]
     },
     {
-      title: "Rajasthan - Royal Heritage",
+      title: "Rajasthan Royal Heritage",
       slug: "rajasthan",
-      icon: "🏯",
-      flag: "🇮🇳",
+      image: "https://images.unsplash.com/photo-1539590581446-74e33a6e2ab2?w=500",
+      region: "Rajasthan",
       rating: "4.8",
       price: "15,999",
-      description: "Walk through the land of kings with majestic forts, opulent palaces, desert safaris, and vibrant cultural experiences.",
+      description: "Walk through the land of kings with majestic forts, opulent palaces, and desert safaris.",
       duration: "7-9 Days",
       groupSize: "2-8 People",
       temperature: "32°C",
@@ -371,10 +369,10 @@ export default function Destinations() {
       highlights: ["Palace Stay", "Camel Safari", "Folk Dance", "Desert Camp"]
     },
     {
-      title: "Andaman Islands - Tropical Escape",
+      title: "Andaman Islands",
       slug: "andaman",
-      icon: "🏝️",
-      flag: "🇮🇳",
+      image: "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?w=500",
+      region: "Andaman",
       rating: "4.9",
       price: "18,999",
       description: "Pristine beaches, crystal-clear waters, and incredible marine life make this the perfect tropical getaway.",
@@ -386,13 +384,13 @@ export default function Destinations() {
       highlights: ["Scuba Diving", "Beach Camping", "Coral Reefs", "Snorkeling"]
     },
     {
-      title: "Ladakh - Mountain Desert",
+      title: "Ladakh Mountain Desert",
       slug: "ladakh",
-      icon: "🚵",
-      flag: "🇮🇳",
+      image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=500",
+      region: "Ladakh",
       rating: "4.9",
       price: "21,999",
-      description: "High-altitude adventure with breathtaking landscapes, ancient monasteries, and challenging treks in the Himalayas.",
+      description: "High-altitude adventure with breathtaking landscapes, ancient monasteries, and challenging treks.",
       duration: "8-10 Days",
       groupSize: "2-4 People",
       temperature: "8°C",
@@ -401,13 +399,13 @@ export default function Destinations() {
       highlights: ["Bike Trip", "High Altitude Lakes", "Monasteries", "Trekking"]
     },
     {
-      title: "Varanasi - Spiritual Capital",
+      title: "Varanasi Spiritual Journey",
       slug: "varanasi",
-      icon: "🛕",
-      flag: "🇮🇳",
+      image: "https://images.unsplash.com/photo-1598257008675-7b708b103b1a?w=500",
+      region: "Uttar Pradesh",
       rating: "4.4",
       price: "6,999",
-      description: "Experience ancient spiritual rituals, sacred Ganga Aarti, and the timeless culture of India's oldest living city.",
+      description: "Experience ancient spiritual rituals, sacred Ganga Aarti, and timeless culture.",
       duration: "2-4 Days",
       groupSize: "1-8 People",
       temperature: "30°C",
@@ -416,13 +414,13 @@ export default function Destinations() {
       highlights: ["Ganga Aarti", "Temple Tour", "Boat Ride", "Yoga"]
     },
     {
-      title: "Rishikesh - Yoga Capital",
+      title: "Rishikesh Yoga Capital",
       slug: "rishikesh",
-      icon: "🧘",
-      flag: "🇮🇳",
+      image: "https://images.unsplash.com/photo-1594736797933-d0f05c5bd04e?w=500",
+      region: "Uttarakhand",
       rating: "4.6",
       price: "5,999",
-      description: "Find your inner peace with yoga, meditation, and adventure sports in the foothills of the Himalayas.",
+      description: "Find your inner peace with yoga, meditation, and adventure sports in the Himalayan foothills.",
       duration: "3-5 Days",
       groupSize: "1-10 People",
       temperature: "22°C",
@@ -432,7 +430,7 @@ export default function Destinations() {
     }
   ];
 
-  // LOAD DATA
+  // Load data
   useEffect(() => {
     setTimeout(() => {
       setDestinations(sampleDestinations);
@@ -441,7 +439,7 @@ export default function Destinations() {
     }, 1200);
   }, []);
 
-  // APPLY FILTERS AND SORTING
+  // Apply filters and sorting
   useEffect(() => {
     let list = [...destinations];
 
@@ -471,7 +469,6 @@ export default function Destinations() {
         list.sort((a, b) => parseFloat(b.price.replace(/,/g, '')) - parseFloat(a.price.replace(/,/g, '')));
         break;
       case "popular":
-        // For demo, using rating as popularity proxy
         list.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
         break;
       default: // featured
@@ -481,7 +478,7 @@ export default function Destinations() {
     setFilteredDestinations(list);
   }, [activeFilter, searchTerm, sortBy, destinations]);
 
-  // UPDATE FILTER COUNTS
+  // Update filter counts
   useEffect(() => {
     filters.forEach(filter => {
       if (filter.id === "all") {
@@ -492,10 +489,10 @@ export default function Destinations() {
     });
   }, [destinations]);
 
-  // LOADING UI
+  // Loading UI
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-24 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-rose-50/30 pt-24 flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -504,7 +501,7 @@ export default function Destinations() {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"
+            className="w-16 h-16 border-4 border-rose-600 border-t-transparent rounded-full mx-auto mb-4"
           />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Discovering Amazing Destinations</h2>
           <p className="text-gray-600">Loading your next adventure...</p>
@@ -514,39 +511,39 @@ export default function Destinations() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-20 pb-20">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-rose-50/30 pt-20 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* ENHANCED HEADER */}
+        {/* Enhanced Header */}
         <motion.div 
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <motion.span
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 rounded-2xl text-lg font-semibold mb-6 border border-blue-200/50"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-rose-100 text-rose-700 rounded-2xl text-sm font-semibold mb-6"
           >
-            🌍 Explore Incredible India
+            <Sparkles size={16} />
+            Explore Incredible India
           </motion.span>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
             Discover Your Next
-            <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Adventure 🗺️
+            <span className="block bg-gradient-to-r from-rose-600 to-orange-600 bg-clip-text text-transparent">
+              Adventure
             </span>
           </h1>
 
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            From snow-capped Himalayas to tropical beaches, ancient temples to modern cities - 
-            explore the diverse beauty of India with our handpicked destinations.
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            From snow-capped Himalayas to tropical beaches, explore the diverse beauty of India with our handpicked destinations.
           </p>
         </motion.div>
 
-        {/* ENHANCED FILTERS */}
+        {/* Enhanced Filters */}
         <FilterSection
           filters={filters}
           activeFilter={activeFilter}
@@ -556,13 +553,15 @@ export default function Destinations() {
           sortBy={sortBy}
           onSortChange={setSortBy}
           resultsCount={filteredDestinations.length}
+          showFilters={showFilters}
+          setShowFilters={setShowFilters}
         />
 
-        {/* DESTINATIONS GRID */}
+        {/* Destinations Grid */}
         {filteredDestinations.length > 0 ? (
           <motion.div
             layout
-            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
           >
             <AnimatePresence>
               {filteredDestinations.map((item, index) => (
@@ -571,14 +570,16 @@ export default function Destinations() {
             </AnimatePresence>
           </motion.div>
         ) : (
-          /* EMPTY STATE */
+          /* Empty State */
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-20 bg-white rounded-3xl shadow-lg"
+            className="text-center py-20 bg-white rounded-3xl shadow-lg border border-gray-100"
           >
-            <div className="text-8xl mb-6">🔍</div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">
+            <div className="w-24 h-24 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Search size={32} className="text-rose-600" />
+            </div>
+            <h3 className="text-2xl font-semibold text-gray-800 mb-4">
               No destinations found
             </h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
@@ -589,46 +590,41 @@ export default function Destinations() {
                 setActiveFilter("all");
                 setSearchTerm("");
               }}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-2xl font-semibold hover:shadow-lg transition-all"
+              className="bg-rose-600 hover:bg-rose-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors"
             >
               Show All Destinations
             </button>
           </motion.div>
         )}
 
-        {/* LOAD MORE BUTTON */}
+        {/* Load More Button */}
         {filteredDestinations.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-center mt-16"
+            className="text-center mt-12"
           >
-            <button className="bg-white border-2 border-blue-600 text-blue-600 px-10 py-4 rounded-2xl font-bold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl">
+            <button className="bg-white border-2 border-rose-600 text-rose-600 px-8 py-4 rounded-xl font-semibold hover:bg-rose-600 hover:text-white transition-all duration-300">
               Load More Destinations
             </button>
           </motion.div>
         )}
 
-        {/* NEWSLETTER SECTION */}
+        {/* Newsletter Section */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
           viewport={{ once: true }}
-          className="mt-24 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl text-white text-center py-16 px-8 shadow-2xl relative overflow-hidden"
+          className="mt-20 bg-gradient-to-r from-rose-600 to-orange-600 rounded-3xl text-white text-center py-12 px-6 shadow-2xl"
         >
-          {/* Background Elements */}
-          <div className="absolute top-0 left-0 w-40 h-40 bg-white/10 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-          <div className="absolute bottom-0 right-0 w-60 h-60 bg-white/10 rounded-full translate-x-1/2 translate-y-1/2"></div>
-          
-          <div className="relative z-10 max-w-2xl mx-auto">
-            <h2 className="text-4xl font-extrabold mb-4">
-              ✈️ Never Miss an Adventure
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold mb-4">
+              Never Miss an Adventure
             </h2>
-            <p className="text-blue-100 text-lg mb-8 leading-relaxed">
-              Get exclusive destination guides, travel deals, and insider tips delivered to your inbox. 
-              Join 10,000+ travelers discovering India.
+            <p className="text-rose-100 text-lg mb-8 leading-relaxed">
+              Get exclusive destination guides, travel deals, and insider tips delivered to your inbox.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
@@ -636,13 +632,13 @@ export default function Destinations() {
                 placeholder="Enter your email address"
                 className="px-6 py-4 rounded-2xl text-gray-800 flex-1 text-lg placeholder-gray-500 focus:ring-4 focus:ring-white/20 outline-none"
               />
-              <button className="bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:scale-105 transition-all duration-300">
-                Subscribe Now
+              <button className="bg-white text-rose-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:scale-105 transition-all duration-300">
+                Subscribe
               </button>
             </div>
             
-            <p className="text-blue-200 text-sm mt-4">
-              No spam ever. Unsubscribe anytime with one click.
+            <p className="text-rose-200 text-sm mt-4">
+              No spam ever. Unsubscribe anytime.
             </p>
           </div>
         </motion.div>

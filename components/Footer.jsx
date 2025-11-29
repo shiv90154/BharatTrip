@@ -1,214 +1,289 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
-
 import {
   Facebook,
   Instagram,
   Twitter,
-  Linkedin,
   Mail,
   Phone,
   MapPin,
   Send,
-  MessageCircle
+  Heart
 } from "lucide-react";
 
 export default function Footer() {
   const [email, setEmail] = useState("");
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   const links = [
     { name: "Home", href: "/" },
     { name: "Packages", href: "/packages" },
     { name: "Destinations", href: "/destinations" },
-    { name: "Blogs", href: "/blogs" },
-    { name: "Contact", href: "/contact" },
+    { name: "Gallery", href: "/gallery" },
+    { name: "About Us", href: "/about" },
   ];
 
   const destinations = [
-    "Goa Beaches",
-    "Himachal Pradesh",
-    "Kerala Backwaters",
-    "Rajasthan Heritage",
-    "Ladakh Adventure",
+    { name: "Goa Beaches", href: "/destinations/goa" },
+    { name: "Himachal", href: "/destinations/himachal" },
+    { name: "Kerala", href: "/destinations/kerala" },
+    { name: "Rajasthan", href: "/destinations/rajasthan" },
+  ];
+
+  const support = [
+    { name: "Help Center", href: "/help" },
+    { name: "Travel Guide", href: "/guide" },
+    { name: "Cancellation", href: "/cancellation" },
+    { name: "Safety", href: "/safety" },
   ];
 
   const socials = [
-    { icon: <Facebook size={20} />, href: "#" },
-    { icon: <Instagram size={20} />, href: "#" },
-    { icon: <Twitter size={20} />, href: "#" },
-    { icon: <Linkedin size={20} />, href: "#" },
+    { 
+      icon: <Facebook size={16} />, 
+      href: "#", 
+      name: "Facebook",
+    },
+    { 
+      icon: <Instagram size={16} />, 
+      href: "#", 
+      name: "Instagram",
+    },
+    { 
+      icon: <Twitter size={16} />, 
+      href: "#", 
+      name: "Twitter",
+    },
   ];
 
   const fadeUp = {
-    hidden: { opacity: 0, y: 40 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+  };
+
+  const stagger = {
+    show: {
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
   };
 
   const handleSubscribe = (e) => {
     e.preventDefault();
-    alert("Subscribed Successfully!");
-    setEmail("");
+    if (email) {
+      setIsSubscribed(true);
+      setTimeout(() => setIsSubscribed(false), 3000);
+      setEmail("");
+    }
   };
 
   return (
-    <footer className="relative bg-gradient-to-br from-[#0A1D3A] to-[#0E2A4D] text-white pt-16 pb-8 mt-16 overflow-hidden">
-
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[url('/footer-pattern.svg')] opacity-10 bg-cover"></div>
-
-      {/* Light Glow */}
-      <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-72 h-72 bg-orange-500/20 rounded-full blur-3xl"></div>
-
+    <footer className="relative bg-white text-gray-800 border-t border-gray-200 pt-16 pb-8">
+      
+      {/* Main Footer Content */}
       <motion.div
         initial="hidden"
         whileInView="show"
-        variants={fadeUp}
+        variants={stagger}
         viewport={{ once: true }}
-        className="relative z-20 max-w-7xl mx-auto px-6"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
-        {/* GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12 mb-12">
 
-          {/* Brand */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-14 h-14 rounded-xl bg-orange-500 flex items-center justify-center shadow-xl">
-                <span className="text-xl font-extrabold">BT</span>
+          {/* Brand Column */}
+          <motion.div
+            variants={fadeUp}
+            className="lg:col-span-2"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-lg bg-rose-500 flex items-center justify-center shadow-sm">
+                <span className="text-white font-bold text-sm">BT</span>
               </div>
-              <h2 className="text-3xl font-extrabold bg-gradient-to-r from-orange-400 to-white bg-clip-text text-transparent">
-                BharatTrip
-              </h2>
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  BharatTrip
+                </h2>
+                <p className="text-sm text-gray-600">Explore Incredible India</p>
+              </div>
             </div>
 
-            <p className="text-gray-300 leading-relaxed">
-              Explore India like never before—mountains, beaches, culture, and adventure.
-              Trusted by 10,000+ travelers.
+            <p className="text-gray-600 leading-relaxed mb-6 text-sm">
+              Discover authentic Indian experiences with curated travel packages. 
+              From Himalayan adventures to coastal retreats.
             </p>
 
-            <div className="flex gap-3 mt-5">
-              {socials.map((s, i) => (
+            {/* Social Links */}
+            <div className="flex gap-2">
+              {socials.map((social, i) => (
                 <motion.a
-                  whileHover={{ scale: 1.15 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   key={i}
-                  href={s.href}
-                  className="p-2 rounded-lg bg-white/10 hover:bg-orange-500 transition text-white shadow-md"
+                  href={social.href}
+                  className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all duration-300 text-gray-600"
+                  aria-label={social.name}
                 >
-                  {s.icon}
+                  {social.icon}
                 </motion.a>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Quick Links */}
-          <div>
-            <h3 className="text-xl font-bold mb-4">Quick Links</h3>
+          <motion.div variants={fadeUp}>
+            <h3 className="text-sm font-semibold mb-4 text-gray-900 uppercase tracking-wide">
+              Quick Links
+            </h3>
             <ul className="space-y-2">
-              {links.map((l) => (
-                <li key={l.name}>
+              {links.map((link) => (
+                <li key={link.name}>
                   <Link
-                    href={l.href}
-                    className="text-gray-300 hover:text-white transition flex items-center gap-2"
+                    href={link.href}
+                    className="text-gray-600 hover:text-rose-500 transition-all duration-300 text-sm hover:pl-1"
                   >
-                    • {l.name}
+                    {link.name}
                   </Link>
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Destinations */}
-          <div>
-            <h3 className="text-xl font-bold mb-4">Top Destinations</h3>
+          <motion.div variants={fadeUp}>
+            <h3 className="text-sm font-semibold mb-4 text-gray-900 uppercase tracking-wide">
+              Destinations
+            </h3>
             <ul className="space-y-2">
-              {destinations.map((d) => (
-                <li key={d}>
-                  <span className="text-gray-300 hover:text-white transition cursor-pointer">
-                    • {d}
-                  </span>
+              {destinations.map((destination) => (
+                <li key={destination.name}>
+                  <Link
+                    href={destination.href}
+                    className="text-gray-600 hover:text-rose-500 transition-all duration-300 text-sm hover:pl-1"
+                  >
+                    {destination.name}
+                  </Link>
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
-          {/* Contact + Newsletter */}
-          <div>
-            <h3 className="text-xl font-bold mb-4">Contact Us</h3>
+          {/* Contact & Newsletter */}
+          <motion.div variants={fadeUp}>
+            <h3 className="text-sm font-semibold mb-4 text-gray-900 uppercase tracking-wide">
+              Contact & Newsletter
+            </h3>
 
-            <div className="space-y-4 text-gray-200">
-
-              <div className="flex gap-3">
-                <MapPin className="text-orange-400" />
-                <p>Kehloor Bhawan Shakti Vihar, Panthghati - 171009</p>
-              </div>
-
-              <div className="flex gap-3">
-                <Phone className="text-orange-400" />
+            {/* Contact Info */}
+            <div className="space-y-3 text-gray-600 mb-6 text-sm">
+              <div className="flex items-center gap-2">
+                <Phone size={14} className="text-rose-500" />
                 <div>
-                  <Link href="tel:+918894322900" className="hover:text-white">
+                  <Link href="tel:+918894322900" className="block hover:text-rose-500 transition-colors">
                     +91 88943 22900
-                  </Link>
-                  <br />
-                  <Link href="tel:+918894323900" className="hover:text-white">
-                    +91 88943 23900
                   </Link>
                 </div>
               </div>
 
-              <div className="flex gap-3">
-                <Mail className="text-orange-400" />
-                <Link href="mailto:info@bharattrip.net" className="hover:text-white">
+              <div className="flex items-center gap-2">
+                <Mail size={14} className="text-rose-500" />
+                <Link href="mailto:info@bharattrip.net" className="hover:text-rose-500 transition-colors">
                   info@bharattrip.net
                 </Link>
+              </div>
+
+              <div className="flex items-start gap-2">
+                <MapPin size={14} className="text-rose-500 mt-0.5" />
+                <p className="text-xs">
+                  Kehloor Bhawan Shakti Vihar, Panthghati - 171009
+                </p>
               </div>
             </div>
 
             {/* Newsletter */}
-            <div className="mt-6 p-4 rounded-2xl bg-white/10 backdrop-blur-md shadow-xl border border-white/10">
-              <h4 className="font-bold text-white mb-2">Subscribe for Offers</h4>
+            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+              <h4 className="font-medium text-gray-900 mb-2 text-sm">Get Travel Updates</h4>
 
-              <form onSubmit={handleSubscribe} className="flex items-center">
-                <input
-                  type="email"
-                  required
-                  placeholder="Enter your email"
-                  className="flex-1 p-3 bg-white/20 text-white placeholder-white rounded-xl outline-none"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-
-                <button
-                  type="submit"
-                  className="ml-2 bg-orange-500 hover:bg-orange-600 p-3 rounded-xl text-white shadow-lg"
-                >
-                  <Send size={20} />
-                </button>
-              </form>
+              <AnimatePresence mode="wait">
+                {isSubscribed ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    className="text-center py-2"
+                  >
+                    <p className="text-green-600 text-sm font-medium">Thank you for subscribing!</p>
+                  </motion.div>
+                ) : (
+                  <motion.form
+                    initial={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onSubmit={handleSubscribe}
+                    className="flex items-center gap-2"
+                  >
+                    <input
+                      type="email"
+                      required
+                      placeholder="Your email"
+                      className="flex-1 p-2 bg-white border border-gray-300 text-gray-800 placeholder-gray-400 rounded-lg outline-none focus:ring-1 focus:ring-rose-500 focus:border-rose-500 text-sm"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      type="submit"
+                      className="p-2 bg-rose-500 hover:bg-rose-600 rounded-lg text-white transition-all duration-300"
+                    >
+                      <Send size={16} />
+                    </motion.button>
+                  </motion.form>
+                )}
+              </AnimatePresence>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Divider */}
-        <div className="border-t border-white/20 my-10"></div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="border-t border-gray-200 my-8"
+        />
 
         {/* Bottom Row */}
-        <div className="flex flex-col md:flex-row justify-between items-center text-gray-300 text-sm">
-          <p>© 2025 BharatTrip. All Rights Reserved.</p>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          viewport={{ once: true }}
+          className="flex flex-col md:flex-row justify-between items-center text-gray-600 text-sm"
+        >
+          <div className="flex items-center gap-4 mb-4 md:mb-0">
+            <p>© 2025 BharatTrip. All rights reserved.</p>
+            <div className="flex items-center gap-1 text-xs">
+              <span>Made with</span>
+              <Heart size={12} className="text-rose-500" />
+              <span>in India</span>
+            </div>
+          </div>
 
-          <div className="flex gap-5 mt-3 md:mt-0">
-            {["Privacy Policy", "Terms of Use", "Cookies"].map((x) => (
-              <Link key={x} href="#" className="hover:text-white">
-                {x}
+          <div className="flex gap-6">
+            {["Privacy", "Terms", "Cookies"].map((item) => (
+              <Link
+                key={item}
+                href="#"
+                className="hover:text-rose-500 transition-colors text-xs"
+              >
+                {item}
               </Link>
             ))}
           </div>
-        </div>
-
-        {/* Floating WhatsApp */}
-     
+        </motion.div>
       </motion.div>
     </footer>
   );

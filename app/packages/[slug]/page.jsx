@@ -1,56 +1,32 @@
 "use client";
 
-import { 
-  Container, 
-  Grid, 
-  Typography, 
-  Box, 
-  Paper, 
-  Chip,
-  Button,
-  Card,
-  CardContent,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Divider,
-  Rating,
-  Stepper,
-  Step,
-  StepLabel,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Fab,
-  useTheme,
-  alpha
-} from '@mui/material';
-import { 
-  ArrowBack, 
-  LocationOn, 
-  AccessTime, 
-  Star, 
-  People,
-  LocalOffer,
-  Security,
-  CheckCircle,
-  Hotel,
-  Restaurant,
-  DirectionsCar,
-  CameraAlt,
-  Favorite,
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import {
+  ArrowLeft,
+  MapPin,
+  Calendar,
+  Star,
+  Users,
+  Heart,
   Share,
   Bookmark,
-  WhatsApp,
-  Phone
-} from '@mui/icons-material';
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+  Phone,
+  MessageCircle,
+  Shield,
+  Award,
+  CheckCircle,
+  Clock,
+  Utensils,
+  Car,
+  Hotel,
+  Camera
+} from "lucide-react";
 
-// Mock packages data - in real app, this would come from API/database
-const packages = [
+// Sample packages data - same as listing page
+const packagesData = [
   { 
     title: "Kashmir 5N/6D", 
     image: "https://images.unsplash.com/photo-1571624436279-b272aff752b5?w=500", 
@@ -73,7 +49,7 @@ const packages = [
       "https://images.unsplash.com/photo-1590663550613-84b8d57b3e2e?w=800"
     ],
     about: "Experience the paradise on earth with our carefully curated Kashmir tour. From serene Dal Lake to the majestic Himalayas, this package offers the perfect blend of nature, culture, and adventure.",
-    highlights: [
+    detailedHighlights: [
       "Stay in luxurious houseboats on Dal Lake",
       "Gondola ride in Gulmarg - highest cable car in the world",
       "Shikara ride through floating gardens",
@@ -133,6 +109,14 @@ const packages = [
       "Adventure activities charges",
       "Personal expenses",
       "Travel insurance"
+    ],
+    quickFacts: [
+      { icon: <Hotel className="w-4 h-4" />, text: "Luxury Stays" },
+      { icon: <Utensils className="w-4 h-4" />, text: "Meals Included" },
+      { icon: <Car className="w-4 h-4" />, text: "Private Transport" },
+      { icon: <Camera className="w-4 h-4" />, text: "Photo Opportunities" },
+      { icon: <Shield className="w-4 h-4" />, text: "Safe & Secure" },
+      { icon: <Award className="w-4 h-4" />, text: "Best Price" }
     ]
   },
   { 
@@ -157,7 +141,7 @@ const packages = [
       "https://images.unsplash.com/photo-1520250497596-4c4d0b072b66?w=800"
     ],
     about: "Experience the vibrant beaches and Portuguese heritage of Goa. From beach parties to water sports, this package offers the perfect coastal getaway with sun, sand, and sea.",
-    highlights: [
+    detailedHighlights: [
       "Beach hopping across famous Goan beaches",
       "Water sports activities including parasailing and jet skiing",
       "Portuguese heritage site visits",
@@ -205,120 +189,31 @@ const packages = [
       "Water sports charges",
       "Personal expenses",
       "Travel insurance"
-    ]
-  },
-  // Add more packages with similar structure...
-  { 
-    title: "Himachal Adventure", 
-    image: "https://images.unsplash.com/photo-1574362849221-71cad6d6fb34?w=500", 
-    slug: "himachal-adventure", 
-    duration: "6N/7D", 
-    price: 14999,
-    originalPrice: 18999,
-    discount: 21,
-    rating: 4.9,
-    reviews: 156,
-    location: "Manali, Kasol, Spiti Valley",
-    highlights: ["Trekking", "Camping", "Mountain Biking", "River Rafting"],
-    featured: true,
-    category: "adventure",
-    tags: ["Adventure", "Trekking", "Extreme"],
-    images: [
-      "https://images.unsplash.com/photo-1574362849221-71cad6d6fb34?w=800",
-      "https://images.unsplash.com/photo-1503614478377-5cee3227f41c?w=800",
-      "https://images.unsplash.com/photo-1464822759849-e41f2bcaceb2?w=800",
-      "https://images.unsplash.com/photo-1464822759849-e41f2bcaceb2?w=800"
     ],
-    about: "Adventure-packed tour through the majestic Himalayas of Himachal Pradesh. Experience trekking, camping, and thrilling activities in the lap of nature.",
-    highlights: [
-      "Trekking through Himalayan trails",
-      "Camping under the stars",
-      "River rafting in Beas River",
-      "Mountain biking adventures",
-      "Visit to ancient monasteries",
-      "Hot water springs experience"
-    ],
-    itinerary: [
-      {
-        day: 1,
-        title: "Arrival in Manali",
-        details: "Arrive at Bhuntar Airport. Transfer to Manali. Evening leisure time to explore Mall Road and local markets.",
-        activities: ["Airport Pickup", "Market Visit", "Hotel Check-in"]
-      },
-      {
-        day: 2,
-        title: "Manali Local Sightseeing",
-        details: "Visit Hadimba Temple, Vashisht Hot Water Springs, and Tibetan Monastery. Afternoon free for adventure activities.",
-        activities: ["Temple Visit", "Hot Springs", "Adventure Sports"]
-      },
-      {
-        day: 3,
-        title: "Solang Valley Adventure",
-        details: "Full day at Solang Valley for adventure activities - paragliding, zorbing, and cable car rides.",
-        activities: ["Paragliding", "Zorbing", "Cable Car"]
-      },
-      {
-        day: 4,
-        title: "Manali to Kasol",
-        details: "Drive to Kasol through beautiful valleys. Evening trek to nearby villages and experience local culture.",
-        activities: ["Scenic Drive", "Village Trek", "Cultural Experience"]
-      },
-      {
-        day: 5,
-        title: "Kasol to Kheerganga Trek",
-        details: "Trek to Kheerganga through beautiful trails. Overnight camping with bonfire and stargazing.",
-        activities: ["Trekking", "Camping", "Bonfire"]
-      },
-      {
-        day: 6,
-        title: "Return to Manali",
-        details: "Return trek to Kasol and drive back to Manali. Evening free for shopping and relaxation.",
-        activities: ["Return Trek", "Shopping", "Relaxation"]
-      },
-      {
-        day: 7,
-        title: "Departure",
-        details: "After breakfast, check out and transfer to airport for departure.",
-        activities: ["Breakfast", "Airport Drop"]
-      }
-    ],
-    inclusions: [
-      "6 Nights accommodation in hotels and camps",
-      "All meals during trekking days",
-      "All transfers and sightseeing",
-      "Trekking equipment",
-      "Adventure activity charges",
-      "All applicable taxes"
-    ],
-    exclusions: [
-      "Airfare/train tickets",
-      "Personal adventure gear",
-      "Personal expenses",
-      "Travel insurance"
+    quickFacts: [
+      { icon: <Hotel className="w-4 h-4" />, text: "Beach Resort Stay" },
+      { icon: <Utensils className="w-4 h-4" />, text: "Breakfast Included" },
+      { icon: <Car className="w-4 h-4" />, text: "Private Transport" },
+      { icon: <Camera className="w-4 h-4" />, text: "Photo Opportunities" },
+      { icon: <Shield className="w-4 h-4" />, text: "Safe & Secure" },
+      { icon: <Award className="w-4 h-4" />, text: "Best Price" }
     ]
   }
 ];
 
-export default function PackageDetails() {
-  const theme = useTheme();
+export default function PackageDetail() {
   const router = useRouter();
   const { slug } = useParams();
   const [data, setData] = useState(null);
   const [currentImage, setCurrentImage] = useState(0);
-  const [isBookmark, setIsBookmark] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate API call delay
     const timer = setTimeout(() => {
-      const packageData = packages.find(pkg => pkg.slug === slug);
-      
-      if (packageData) {
-        setData(packageData);
-      } else {
-        // Handle package not found
-        console.error('Package not found');
-      }
+      const packageData = packagesData.find(pkg => pkg.slug === slug);
+      setData(packageData);
       setLoading(false);
     }, 1000);
 
@@ -327,423 +222,278 @@ export default function PackageDetails() {
 
   if (loading) {
     return (
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          minHeight: '100vh',
-          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.secondary.main, 0.05)} 100%)`
-        }}
-      >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Typography variant="h6" color="primary">
-            Loading amazing experience...
-          </Typography>
-        </motion.div>
-      </Box>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-rose-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading amazing experience...</p>
+        </div>
+      </div>
     );
   }
 
   if (!data) {
     return (
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          minHeight: '100vh',
-          flexDirection: 'column',
-          gap: 2
-        }}
-      >
-        <Typography variant="h4" color="error">
-          Package Not Found
-        </Typography>
-        <Button 
-          variant="contained" 
-          onClick={() => router.push('/')}
-          startIcon={<ArrowBack />}
-        >
-          Back to Home
-        </Button>
-      </Box>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Package Not Found</h2>
+          <Link href="/packages" className="text-rose-600 hover:text-rose-700 font-medium">
+            ← Back to Packages
+          </Link>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Box 
-      sx={{ 
-        minHeight: '100vh',
-        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.03)} 0%, ${alpha(theme.palette.secondary.main, 0.03)} 100%)`
-      }}
-    >
+    <div className="min-h-screen bg-white">
       {/* Sticky Header */}
-      <AppBar 
-        position="sticky" 
-        color="transparent"
-        elevation={0}
-        sx={{ 
-          backdropFilter: 'blur(20px)',
-          backgroundColor: alpha(theme.palette.background.paper, 0.8),
-          borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            edge="start"
-            onClick={() => router.back()}
-            sx={{ mr: 2 }}
-          >
-            <ArrowBack />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
-            {data.title}
-          </Typography>
-          <IconButton onClick={() => setIsBookmark(!isBookmark)}>
-            {isBookmark ? <Bookmark color="primary" /> : <Bookmark />}
-          </IconButton>
-          <IconButton>
-            <Share />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Grid container spacing={4}>
-          {/* Main Content */}
-          <Grid item xs={12} lg={8}>
-            {/* Image Gallery */}
-            <Paper 
-              elevation={0}
-              sx={{ 
-                borderRadius: 3, 
-                overflow: 'hidden', 
-                mb: 4,
-                position: 'relative'
-              }}
+      <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-40">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between py-4">
+            <button
+              onClick={() => router.back()}
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
             >
-              <Box 
-                component="img"
-                src={data.images[currentImage]}
-                alt={data.title}
-                sx={{
-                  width: '100%',
-                  height: 400,
-                  objectFit: 'cover',
-                  display: 'block'
-                }}
-              />
-              
+              <ArrowLeft size={20} />
+              <span className="font-medium">Back</span>
+            </button>
+
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsBookmarked(!isBookmarked)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <Bookmark
+                  size={20}
+                  className={isBookmarked ? "fill-rose-600 text-rose-600" : "text-gray-600"}
+                />
+              </button>
+              <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                <Share size={20} className="text-gray-600" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2">
+            {/* Image Gallery */}
+            <div className="bg-white rounded-2xl overflow-hidden mb-6">
+              <div className="relative h-80 w-full">
+                <img
+                  src={data.images[currentImage]}
+                  alt={data.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
               {/* Image Thumbnails */}
-              <Box sx={{ display: 'flex', p: 2, gap: 1, overflowX: 'auto' }}>
+              <div className="flex gap-2 p-4 overflow-x-auto">
                 {data.images.map((img, index) => (
-                  <Box
+                  <button
                     key={index}
-                    component="img"
-                    src={img}
-                    alt={`${data.title} ${index + 1}`}
                     onClick={() => setCurrentImage(index)}
-                    sx={{
-                      width: 80,
-                      height: 60,
-                      objectFit: 'cover',
-                      borderRadius: 1,
-                      cursor: 'pointer',
-                      opacity: currentImage === index ? 1 : 0.6,
-                      border: currentImage === index ? `2px solid ${theme.palette.primary.main}` : 'none',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        opacity: 1
-                      }
-                    }}
-                  />
+                    className="flex-shrink-0"
+                  >
+                    <img
+                      src={img}
+                      alt={`${data.title} ${index + 1}`}
+                      className={`w-20 h-16 object-cover rounded-lg transition-all ${
+                        currentImage === index
+                          ? "ring-2 ring-rose-600"
+                          : "opacity-60 hover:opacity-100"
+                      }`}
+                    />
+                  </button>
                 ))}
-              </Box>
-            </Paper>
+              </div>
+            </div>
 
             {/* Package Header */}
-            <Paper elevation={0} sx={{ p: 4, borderRadius: 3, mb: 4 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
-                <Box>
-                  <Chip label="Bestseller" color="primary" sx={{ mb: 2 }} />
-                  <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
+            <div className="bg-white rounded-2xl p-6 mb-6 border border-gray-100">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
+                <div className="flex-1">
+                  <span className="inline-block bg-rose-600 text-white px-3 py-1 rounded-full text-xs font-medium mb-3">
+                    Bestseller
+                  </span>
+                  <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-3">
                     {data.title}
-                  </Typography>
-                  
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <LocationOn color="primary" sx={{ mr: 1 }} />
-                      <Typography variant="body1" color="text.secondary">
-                        {data.location}
-                      </Typography>
-                    </Box>
-                    
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <AccessTime color="secondary" sx={{ mr: 1 }} />
-                      <Typography variant="body1" color="text.secondary">
-                        {data.duration}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Box>
+                  </h1>
 
-                <Box sx={{ textAlign: 'right' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', mb: 1 }}>
-                    <Rating value={data.rating} readOnly size="small" />
-                    <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
-                      ({data.reviews} reviews)
-                    </Typography>
-                  </Box>
-                  <People color="action" fontSize="small" />
-                  <Typography variant="body2" color="text.secondary">
-                    {Math.floor(Math.random() * 200) + 50} people booked
-                  </Typography>
-                </Box>
-              </Box>
+                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                    <div className="flex items-center gap-1">
+                      <MapPin size={16} />
+                      <span>{data.location}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar size={16} />
+                      <span>{data.duration}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Star size={16} className="fill-rose-600 text-rose-600" />
+                      <span className="font-medium">{data.rating}</span>
+                      <span>({data.reviews} reviews)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <div className="flex items-center gap-2 justify-end mb-2">
+                    <Users size={16} className="text-gray-400" />
+                    <span className="text-sm text-gray-600">
+                      {Math.floor(Math.random() * 200) + 50} people booked
+                    </span>
+                  </div>
+                </div>
+              </div>
 
               {/* Price Section */}
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                <Typography variant="h3" component="div" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+              <div className="flex items-center gap-4 mb-4">
+                <span className="text-3xl font-bold text-rose-600">
                   ₹{data.price.toLocaleString()}
-                </Typography>
+                </span>
                 {data.originalPrice > data.price && (
                   <>
-                    <Typography 
-                      variant="h5" 
-                      sx={{ 
-                        textDecoration: 'line-through',
-                        color: 'text.disabled'
-                      }}
-                    >
+                    <span className="text-xl line-through text-gray-400">
                       ₹{data.originalPrice.toLocaleString()}
-                    </Typography>
-                    <Chip 
-                      label={`Save ${data.discount}%`} 
-                      color="error" 
-                      size="small"
-                    />
+                    </span>
+                    <span className="bg-rose-100 text-rose-700 px-2 py-1 rounded-full text-sm font-medium">
+                      Save {data.discount}%
+                    </span>
                   </>
                 )}
-              </Box>
+              </div>
 
-              <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.8 }}>
+              <p className="text-gray-600 leading-relaxed">
                 {data.about}
-              </Typography>
-            </Paper>
+              </p>
+            </div>
 
             {/* Highlights */}
-            <Paper elevation={0} sx={{ p: 4, borderRadius: 3, mb: 4 }}>
-              <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
-                ✨ Package Highlights
-              </Typography>
-              <Grid container spacing={2}>
-                {data.highlights.map((highlight, index) => (
-                  <Grid item xs={12} sm={6} key={index}>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
-                      <CheckCircle color="primary" sx={{ mr: 2, mt: 0.5, flexShrink: 0 }} />
-                      <Typography variant="body1">
-                        {highlight}
-                      </Typography>
-                    </Box>
-                  </Grid>
+            <div className="bg-white rounded-2xl p-6 mb-6 border border-gray-100">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">✨ Package Highlights</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {data.detailedHighlights.map((highlight, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <CheckCircle size={20} className="text-rose-600 mt-0.5 flex-shrink-0" />
+                    <span className="text-gray-700">{highlight}</span>
+                  </div>
                 ))}
-              </Grid>
-            </Paper>
+              </div>
+            </div>
 
             {/* Itinerary */}
-            <Paper elevation={0} sx={{ p: 4, borderRadius: 3, mb: 4 }}>
-              <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
-                📅 Detailed Itinerary
-              </Typography>
-              
-              <Stepper orientation="vertical" sx={{ mb: 4 }}>
+            <div className="bg-white rounded-2xl p-6 mb-6 border border-gray-100">
+              <h2 className="text-xl font-semibold mb-6 text-gray-800">📅 Detailed Itinerary</h2>
+              <div className="space-y-6">
                 {data.itinerary.map((day) => (
-                  <Step key={day.day} active>
-                    <StepLabel>
-                      <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                        Day {day.day}: {day.title}
-                      </Typography>
-                    </StepLabel>
-                    <Box sx={{ ml: 4, mb: 3 }}>
-                      <Typography variant="body1" color="text.secondary" paragraph>
+                  <div key={day.day} className="flex gap-4">
+                    <div className="flex flex-col items-center">
+                      <div className="w-10 h-10 bg-rose-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+                        {day.day}
+                      </div>
+                      <div className="w-0.5 h-full bg-gray-200 mt-2"></div>
+                    </div>
+                    <div className="flex-1 pb-6">
+                      <h3 className="font-semibold text-gray-800 mb-2">{day.title}</h3>
+                      <p className="text-gray-600 text-sm mb-3 leading-relaxed">
                         {day.details}
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      </p>
+                      <div className="flex flex-wrap gap-2">
                         {day.activities.map((activity, index) => (
-                          <Chip
+                          <span
                             key={index}
-                            label={activity}
-                            size="small"
-                            variant="outlined"
-                            color="primary"
-                          />
+                            className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs border border-gray-200"
+                          >
+                            {activity}
+                          </span>
                         ))}
-                      </Box>
-                    </Box>
-                  </Step>
+                      </div>
+                    </div>
+                  </div>
                 ))}
-              </Stepper>
-            </Paper>
-          </Grid>
+              </div>
+            </div>
+          </div>
 
           {/* Sidebar */}
-          <Grid item xs={12} lg={4}>
+          <div className="lg:col-span-1">
             {/* Booking Card */}
-            <Paper 
-              elevation={4}
-              sx={{ 
-                position: 'sticky',
-                top: 100,
-                borderRadius: 3,
-                overflow: 'hidden',
-                background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.secondary.main, 0.05)} 100%)`
-              }}
-            >
-              <Box sx={{ p: 3 }}>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                  Book This Package
-                </Typography>
-                
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-                    ₹{data.price.toLocaleString()}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    per person
-                  </Typography>
-                </Box>
+            <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm sticky top-24">
+              <h2 className="text-lg font-semibold mb-4 text-gray-800">Book This Package</h2>
 
-                <Button
-                  variant="contained"
-                  fullWidth
-                  size="large"
-                  sx={{
-                    py: 1.5,
-                    mb: 2,
-                    borderRadius: 2,
-                    fontWeight: 'bold',
-                    background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                    '&:hover': {
-                      transform: 'translateY(-2px)',
-                      boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.3)}`,
-                    }
-                  }}
-                >
-                  Book Now
-                </Button>
+              <div className="mb-4">
+                <span className="text-2xl font-bold text-rose-600">
+                  ₹{data.price.toLocaleString()}
+                </span>
+                <span className="text-gray-600 text-sm ml-2">per person</span>
+              </div>
 
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  size="large"
-                  startIcon={<WhatsApp />}
-                  sx={{
-                    py: 1.5,
-                    mb: 2,
-                    borderRadius: 2,
-                    fontWeight: 'bold'
-                  }}
-                >
-                  Chat on WhatsApp
-                </Button>
+              <button className="w-full bg-rose-600 hover:bg-rose-700 text-white py-3 rounded-lg font-semibold mb-3 transition-colors">
+                Book Now
+              </button>
 
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  size="large"
-                  startIcon={<Phone />}
-                  sx={{
-                    py: 1.5,
-                    borderRadius: 2,
-                    fontWeight: 'bold'
-                  }}
-                >
-                  Call for Inquiry
-                </Button>
-              </Box>
+              <button className="w-full border border-green-500 text-green-600 hover:bg-green-50 py-3 rounded-lg font-semibold mb-3 transition-colors flex items-center justify-center gap-2">
+                <MessageCircle size={18} />
+                Chat on WhatsApp
+              </button>
 
-              <Divider />
+              <button className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2">
+                <Phone size={18} />
+                Call for Inquiry
+              </button>
 
-              {/* Inclusions & Exclusions */}
-              <Box sx={{ p: 3 }}>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                  What's Included
-                </Typography>
-                <List dense>
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <h3 className="font-semibold mb-3 text-gray-800">What's Included</h3>
+                <div className="space-y-2">
                   {data.inclusions.map((item, index) => (
-                    <ListItem key={index} sx={{ px: 0 }}>
-                      <ListItemIcon sx={{ minWidth: 32 }}>
-                        <CheckCircle color="success" fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText primary={item} />
-                    </ListItem>
+                    <div key={index} className="flex items-center gap-3">
+                      <CheckCircle size={16} className="text-green-600 flex-shrink-0" />
+                      <span className="text-sm text-gray-600">{item}</span>
+                    </div>
                   ))}
-                </List>
+                </div>
 
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', mt: 2 }}>
-                  Not Included
-                </Typography>
-                <List dense>
+                <h3 className="font-semibold mt-4 mb-3 text-gray-800">Not Included</h3>
+                <div className="space-y-2">
                   {data.exclusions.map((item, index) => (
-                    <ListItem key={index} sx={{ px: 0 }}>
-                      <ListItemIcon sx={{ minWidth: 32 }}>
-                        <CheckCircle color="disabled" fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText primary={item} sx={{ color: 'text.disabled' }} />
-                    </ListItem>
+                    <div key={index} className="flex items-center gap-3">
+                      <CheckCircle size={16} className="text-gray-400 flex-shrink-0" />
+                      <span className="text-sm text-gray-400">{item}</span>
+                    </div>
                   ))}
-                </List>
-              </Box>
-            </Paper>
+                </div>
+              </div>
+            </div>
 
-            {/* Quick Info Card */}
-            <Paper sx={{ p: 3, borderRadius: 3, mt: 3 }}>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                Quick Facts
-              </Typography>
-              {[
-                { icon: <Hotel />, text: "Luxury Stays" },
-                { icon: <Restaurant />, text: "Meals Included" },
-                { icon: <DirectionsCar />, text: "Private Transport" },
-                { icon: <CameraAlt />, text: "Photo Opportunities" },
-                { icon: <Security />, text: "Safe & Secure" },
-                { icon: <LocalOffer />, text: "Best Price" }
-              ].map((item, index) => (
-                <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <Box sx={{ mr: 2, color: 'primary.main' }}>
-                    {item.icon}
-                  </Box>
-                  <Typography variant="body2">
-                    {item.text}
-                  </Typography>
-                </Box>
-              ))}
-            </Paper>
-          </Grid>
-        </Grid>
-      </Container>
+            {/* Quick Facts */}
+            <div className="bg-white rounded-2xl p-6 mt-6 border border-gray-100">
+              <h3 className="font-semibold mb-4 text-gray-800">Quick Facts</h3>
+              <div className="space-y-3">
+                {data.quickFacts.map((fact, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="text-rose-600">
+                      {fact.icon}
+                    </div>
+                    <span className="text-sm text-gray-600">{fact.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Floating Action Button */}
-      <Fab
-        variant="extended"
-        color="primary"
-        sx={{
-          position: 'fixed',
-          bottom: 24,
-          right: 24,
-          px: 3,
-          fontWeight: 'bold',
-          background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`
-        }}
-      >
-        <Favorite sx={{ mr: 1 }} />
-        Book Now
-      </Fab>
-    </Box>
+      <div className="fixed bottom-6 right-6 z-30">
+        <button className="bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
+          <Heart size={20} />
+          Book Now
+        </button>
+      </div>
+    </div>
   );
 }
