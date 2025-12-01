@@ -12,77 +12,106 @@ const FilterAndPackages = () => {
 
   const packages = [
     {
-      slug: "goa-beach",
-      title: "Goa Beach Tour",
-      location: "North Goa",
-      rating: 4.5,
-      reviews: 567,
-      price: 8900,
-      duration: "4 Days 3 Nights",
-      highlights: ["Beach Hopping", "Water Sports", "Nightlife"],
-      image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400",
-      category: "beach"
-    },
-    {
-      slug: "ladakh-bike",
-      title: "Ladakh Bike Trip",
-      location: "Leh, Ladakh",
-      rating: 4.9,
-      reviews: 892,
-      price: 28900,
-      duration: "8 Days 7 Nights",
-      highlights: ["Bike Rental", "High Altitude", "Lakes"],
-      image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=400",
-      category: "adventure"
-    },
-    {
-      slug: "kerala-backwaters",
-      title: "Kerala Backwaters",
-      location: "Alleppey, Kerala",
-      rating: 4.8,
-      reviews: 1247,
-      price: 12500,
-      duration: "3 Days 2 Nights",
-      highlights: ["Houseboat", "Ayurveda", "Village Life"],
-      image: "https://images.unsplash.com/photo-1580619305218-8423a7ef79b4?w=400",
-      category: "cultural"
-    },
-    {
-      slug: "varanasi-spiritual",
-      title: "Varanasi Spiritual Journey",
-      location: "Varanasi, UP",
-      rating: 4.7,
-      reviews: 423,
-      price: 7800,
-      duration: "3 Days 2 Nights",
-      highlights: ["Ganga Aarti", "Temple Tour", "Boat Ride"],
-      image: "https://images.unsplash.com/photo-1591393223703-3fe2e2e6d08a?w=400",
-      category: "spiritual"
-    },
-    {
-      slug: "darjeeling-tea",
-      title: "Darjeeling Tea Estate",
-      location: "Darjeeling, WB",
-      rating: 4.6,
-      reviews: 389,
-      price: 11200,
-      duration: "4 Days 3 Nights",
-      highlights: ["Tea Estate", "Toy Train", "Sunrise View"],
-      image: "https://images.unsplash.com/photo-1547489435-79b65d8d57df?w=400",
-      category: "mountain"
-    },
-    {
-      slug: "kashmir-tulip",
-      title: "Kashmir Tulip Garden",
-      location: "Srinagar, Kashmir",
-      rating: 4.9,
-      reviews: 678,
-      price: 16700,
-      duration: "5 Days 4 Nights",
-      highlights: ["Houseboat", "Tulip Garden", "Shikara Ride"],
-      image: "https://images.unsplash.com/photo-1570547999337-8fbab6f92c4c?w=400",
-      category: "cultural"
-    }
+    title: "Romantic Gateway to Shimla & Manali",
+    image: "/packages/RomanticGatewaytoShimla&Manali.avif",
+    slug: "romantic-shimla-manali-5n6d",
+    duration: "5N/6D",
+    price: 29000,
+    originalPrice: 34000,
+    discount: 15,
+    rating: 4.7,
+    reviews: 112,
+    location: "Shimla, Manali",
+    highlights: ["Kufri", "Mall Road", "Solang Valley", "Hadimba Temple"],
+    featured: true,
+    category: "honeymoon",
+    tags: ["Couple", "Honeymoon", "Romantic"]
+  },
+
+  {
+    title: "Highlights of Kashmir (Srinagar to Srinagar)",
+    image: "/packages/HighlightsOfKashmir(SrinagartoSrinagar).avif",
+    slug: "kashmir-srinagar-5n6d",
+    duration: "5N/6D",
+    price: 35000,
+    originalPrice: 39999,
+    discount: 12,
+    rating: 4.8,
+    reviews: 189,
+    location: "Srinagar, Gulmarg, Pahalgam",
+    highlights: ["Shikara Ride", "Gulmarg Gondola", "Mughal Gardens"],
+    featured: true,
+    category: "mountain",
+    tags: ["Family", "Nature", "Honeymoon"]
+  },
+
+  {
+    title: "Highlights of Kashmir (Jammu to Jammu)",
+    image: "/packages/HighlightsofKashmir(JammutoJammu).avif",
+    slug: "kashmir-jammu-5n6d",
+    duration: "5N/6D",
+    price: 35000,
+    originalPrice: 40000,
+    discount: 12,
+    rating: 4.7,
+    reviews: 164,
+    location: "Jammu, Patnitop, Srinagar, Gulmarg",
+    highlights: ["Patnitop", "Houseboat Stay", "Valleys"],
+    featured: false,
+    category: "mountain",
+    tags: ["Family", "Nature", "Adventure"]
+  },
+
+  {
+    title: "Charming Shimla & Manali (Honeymoon)",
+    image: "/packages/CharmingShimla&Manali(Honeymoon.avif",
+    slug: "charming-shimla-manali-5n6d",
+    duration: "5N/6D",
+    price: 30000,
+    originalPrice: 34000,
+    discount: 12,
+    rating: 4.8,
+    reviews: 210,
+    location: "Shimla, Manali",
+    highlights: ["Candle Light Dinner", "Flower Decoration", "Solang Valley"],
+    featured: true,
+    category: "honeymoon",
+    tags: ["Honeymoon", "Couple", "Romantic"]
+  },
+
+  {
+    title: "Beautiful Himachal Honeymoon",
+    image: "/packages/BeautifulHimachalHoneymoon.avif",
+    slug: "beautiful-himachal-honeymoon-8n9d",
+    duration: "8N/9D",
+    price: 42000,
+    originalPrice: 48000,
+    discount: 13,
+    rating: 4.9,
+    reviews: 155,
+    location: "Shimla, Manali, Dharamshala, Dalhousie",
+    highlights: ["Khajjiar", "Solang", "Romantic Decor"],
+    featured: true,
+    category: "honeymoon",
+    tags: ["Romantic", "Honeymoon", "Luxury"]
+  },
+
+  {
+    title: "Exotic Manali by Volvo",
+    image: "/packages/ExoticManalibyVolvo.avif",
+    slug: "exotic-manali-volvo-3n4d",
+    duration: "3N/4D",
+    price: 26000,
+    originalPrice: 30000,
+    discount: 13,
+    rating: 4.5,
+    reviews: 98,
+    location: "Manali",
+    highlights: ["Solang Valley", "Mall Road", "Hadimba Temple"],
+    featured: false,
+    category: "mountain",
+    tags: ["Budget", "Family", "Volvo Trip"]
+  }
   ];
 
   const categories = [

@@ -10,7 +10,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { MessageCircle, ArrowUp, X, Calendar, MapPin, User, Phone, Mail, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
-import Navigation from '@/components/Navigation';
+
 export default function RootLayout({ children }) {
   const pathname = usePathname();
   const [showTop, setShowTop] = useState(false);
