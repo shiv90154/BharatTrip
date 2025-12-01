@@ -5,32 +5,42 @@ import PackageCard from "./PackageCard";
 
 const TrendingPackages = () => {
   const trendingPackages = [
-    {
-      title: "Ladakh Adventure",
-      location: "Leh, Ladakh",
-      rating: 4.9,
-      reviews: 892,
-      price: 28900,
-      originalPrice: 32000,
-      duration: "7 Days 6 Nights",
-      highlights: ["Pangong Lake", "Nubra Valley", "Magnetic Hill"],
-      image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=400",
-      category: "adventure"
-    },
-    {
-      title: "Shimla Manali Escape",
-      location: "Himachal Pradesh",
-      rating: 4.7,
-      reviews: 634,
-      price: 15600,
-      originalPrice: 18500,
-      duration: "5 Days 4 Nights",
-      highlights: ["Snow Views", "Adventure Sports", "Local Markets"],
-      image: "https://images.unsplash.com/photo-1574362849221-71cad6d6fb34?w=400",
-      category: "mountain"
-    },
+  {
+    title: "Romantic Gateway to Shimla & Manali",
+    image: "/packages/RomanticGatewaytoShimla&Manali.avif",
+    slug: "romantic-shimla-manali-5n6d",
+    duration: "5N/6D",
+    price: 29000,
+    originalPrice: 34000,
+    discount: 15,
+    rating: 4.7,
+    reviews: 112,
+    location: "Shimla, Manali",
+    highlights: ["Kufri", "Mall Road", "Solang Valley", "Hadimba Temple"],
+    featured: true,
+    category: "honeymoon",
+    tags: ["Couple", "Honeymoon", "Romantic"]
+  },
+
+  {
+    title: "Highlights of Kashmir (Srinagar to Srinagar)",
+    image: "/packages/HighlightsOfKashmir(SrinagartoSrinagar).avif",
+    slug: "kashmir-srinagar-5n6d",
+    duration: "5N/6D",
+    price: 35000,
+    originalPrice: 39999,
+    discount: 12,
+    rating: 4.8,
+    reviews: 189,
+    location: "Srinagar, Gulmarg, Pahalgam",
+    highlights: ["Shikara Ride", "Gulmarg Gondola", "Mughal Gardens"],
+    featured: true,
+    category: "mountain",
+    tags: ["Family", "Nature", "Honeymoon"]
+  },
     {
       title: "Andaman Island Tour",
+      slug: "andaman-island-tour",
       location: "Port Blair, Havelock",
       rating: 4.8,
       reviews: 523,
@@ -38,39 +48,56 @@ const TrendingPackages = () => {
       originalPrice: 26000,
       duration: "6 Days 5 Nights",
       highlights: ["Scuba Diving", "Beach Camping", "Coral Reefs"],
-      image: "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?w=400",
+      image: "/gallery/AndamanIslands/1.avif",
       category: "beach"
     }
   ];
 
   return (
-    <section className="py-16 bg-gradient-to-br from-gray-50 to-rose-50/30">
+    <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4">
+
+        {/* Heading */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="flex items-center gap-3 mb-10"
+          className="flex items-center gap-4 mb-14"
         >
-          <div className="p-2 bg-rose-100 rounded-xl">
-            <div className="w-5 h-5 bg-gradient-to-r from-rose-600 to-orange-600 rounded-lg flex items-center justify-center">
-              <span className="text-white text-xs font-bold">🔥</span>
+          <div className="p-3 bg-rose-100 rounded-2xl shadow-sm">
+            <div className="w-7 h-7 bg-gradient-to-r from-rose-600 to-orange-500 rounded-xl flex items-center justify-center">
+              <span className="text-white text-sm">🔥</span>
             </div>
           </div>
+
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
               Trending Now
             </h2>
-            <p className="text-gray-600 mt-1">Most booked experiences this season</p>
+            <p className="text-gray-500 mt-1">
+              Most booked experiences this season
+            </p>
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {trendingPackages.map((pkg, index) => (
-            <PackageCard key={index} pkg={pkg} index={index} />
-          ))}
-        </div>
+        {/* Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+  {trendingPackages.map((pkg, index) => (
+    <motion.div
+      key={index}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1 }}
+      viewport={{ once: true }}
+      className="hover:scale-[1.03] transition-transform duration-300 cursor-pointer"
+      onClick={() => window.location.href = `/packages/${pkg.slug}`}
+    >
+      <PackageCard pkg={pkg} index={index} showButton />
+    </motion.div>
+  ))}
+</div>
+
       </div>
     </section>
   );

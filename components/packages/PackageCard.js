@@ -1,133 +1,169 @@
+// components/packages/PackageCard.js
 "use client";
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { MapPin, Calendar, Star, Heart } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Heart, MapPin, Star, Users, Calendar, ArrowRight, Image as ImageIcon } from 'lucide-react';
+import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 
-const PackageCard = ({ data, index }) => {
-  const [isLiked, setIsLiked] = useState(false);
+export default function PackageCard({ data, index }) {
+  const { 
+    user, 
+    addToUserWishlist, 
+    removeFromUserWishlist, 
+    isPackageInWishlist 
+  } = useAuth();
+  
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setIsWishlisted(isPackageInWishlist(data.slug));
+  }, [data.slug, isPackageInWishlist]);
+
+  const handleWishlistToggle = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const packageData = {
+      id: data.slug,
+      name: data.title,
+      destination: data.location,
+      price: data.price,
+      duration: data.duration,
+      travelers: data.groupSize,
+      rating: data.rating,
+      image: data.image,
+      featured: data.featured,
+      description: data.description,
+      tags: data.tags
+    };
+
+    if (isWishlisted) {
+      // Remove from wishlist
+      removeFromUserWishlist(data.slug);
+      setIsWishlisted(false);
+    } else {
+      // Add to wishlist
+      addToUserWishlist(packageData);
+      setIsWishlisted(true);
+    }
+  };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.1 }}
+      transition={{ delay: index * 0.05 }}
       whileHover={{ y: -4 }}
-      className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all overflow-hidden border border-gray-100 group"
+      className="group relative bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300"
     >
-      {/* Image Container */}
-      <div className="relative h-48 w-full overflow-hidden">
-        <img
-          src={data.image}
-          alt={data.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-        
-        {/* Discount Badge */}
-        {data.discount && (
-          <span className="absolute top-3 right-3 bg-rose-600 text-white text-xs px-2 py-1 rounded-full shadow-lg font-semibold">
-            {data.discount}% OFF
-          </span>
-        )}
-
-        {/* Favorite Button */}
-        <button 
-          onClick={() => setIsLiked(!isLiked)}
-          className="absolute top-3 left-3 bg-white/90 hover:bg-white p-2 rounded-full shadow-md transition-all z-10"
-        >
-          <Heart 
-            size={16} 
-            className={isLiked ? "fill-rose-600 text-rose-600" : "text-gray-600 hover:text-rose-600"} 
-          />
-        </button>
-
-        {/* Category Tag */}
-        <span className="absolute bottom-3 left-3 bg-black/70 text-white px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm">
-          {data.category}
-        </span>
-
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-      </div>
-
-      {/* Content */}
-      <div className="p-4">
-        <Link href={`/packages/${data.slug}`}>
-          <div className="flex items-start justify-between mb-2 cursor-pointer">
-            <h3 className="font-semibold text-gray-800 flex-1 pr-2 hover:text-rose-600 transition-colors text-sm leading-tight">
-              {data.title}
-            </h3>
-            <div className="flex items-center gap-1 bg-rose-50 text-rose-600 px-2 py-1 rounded-full text-xs font-medium">
-              <Star size={10} className="fill-rose-600" />
-              {data.rating}
+      <Link href={`/packages/${data.slug}`}>
+        {/* Package Image */}
+        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100">
+          {data.image && !imageError ? (
+            <img
+              src={data.image}
+              alt={data.title}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              onError={() => setImageError(true)}
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="text-center">
+                <ImageIcon size={48} className="text-gray-400 mx-auto mb-2" />
+                <p className="text-gray-500 text-sm">{data.location}</p>
+              </div>
             </div>
-          </div>
-        </Link>
-
-        <p className="text-gray-500 text-xs mb-2 flex items-center gap-1">
-          <MapPin size={12} />
-          {data.location}
-        </p>
-
-        {/* Highlights */}
-        <div className="flex flex-wrap gap-1 mb-3">
-          {data.highlights.slice(0, 2).map((h, i) => (
-            <span
-              key={i}
-              className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs"
-            >
-              {h}
-            </span>
-          ))}
-          {data.highlights.length > 2 && (
-            <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
-              +{data.highlights.length - 2}
+          )}
+          
+          {/* Wishlist Button */}
+          <button
+            onClick={handleWishlistToggle}
+            className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white hover:scale-110 transition-all duration-300 shadow-lg z-10"
+          >
+            <Heart 
+              size={18} 
+              className={isWishlisted ? "text-[#FF385C] fill-[#FF385C]" : "text-gray-600"} 
+            />
+          </button>
+          
+          {/* Featured Badge */}
+          {data.featured && (
+            <span className="absolute top-3 left-3 px-2 py-1 bg-[#FF385C] text-white text-xs font-semibold rounded-lg">
+              Featured
             </span>
           )}
+          
+          {/* Price Badge */}
+          <div className="absolute bottom-3 left-3 px-3 py-1.5 bg-white/95 backdrop-blur-sm rounded-lg shadow-sm">
+            <span className="text-lg font-bold text-[#FF385C]">₹{data.price.toLocaleString()}</span>
+            <span className="text-xs text-gray-600 ml-1">/person</span>
+          </div>
         </div>
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1 mb-3">
-          {data.tags.slice(0, 2).map((tag, i) => (
-            <span
-              key={i}
-              className="px-2 py-1 bg-blue-50 text-blue-600 rounded-full text-xs border border-blue-100"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        {/* Price Section */}
-        <div className="flex justify-between items-end pt-3 border-t border-gray-100">
-          <div>
-            <p className="text-xs text-gray-500 mb-1">Starting from</p>
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-rose-600">
-                ₹{data.price.toLocaleString()}
-              </span>
-              {data.originalPrice && (
-                <span className="text-sm line-through text-gray-400">
-                  ₹{data.originalPrice.toLocaleString()}
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-              <Calendar size={10} />
-              {data.duration}
-            </p>
+        {/* Package Details */}
+        <div className="p-5">
+          {/* Location */}
+          <div className="flex items-center gap-2 mb-2">
+            <MapPin size={14} className="text-gray-400 flex-shrink-0" />
+            <span className="text-sm text-gray-600 truncate">{data.location}</span>
           </div>
 
-          <Link href={`/packages/${data.slug}`}>
-            <button className="bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 rounded-lg text-xs font-medium transition-colors">
-              View Details
+          {/* Title */}
+          <h3 className="font-bold text-gray-900 mb-3 text-lg line-clamp-1 group-hover:text-[#FF385C] transition-colors">
+            {data.title}
+          </h3>
+
+          {/* Description */}
+          <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
+            {data.description}
+          </p>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-1 mb-4">
+            {data.tags.slice(0, 3).map((tag) => (
+              <span key={tag} className="px-2 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs">
+                {tag}
+              </span>
+            ))}
+            {data.tags.length > 3 && (
+              <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs">
+                +{data.tags.length - 3}
+              </span>
+            )}
+          </div>
+
+          {/* Stats */}
+          <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1">
+                <Calendar size={14} />
+                <span>{data.duration} days</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Users size={14} />
+                <span>{data.groupSize} people</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-1">
+              <Star size={14} className="text-yellow-400 fill-yellow-400" />
+              <span className="font-medium">{data.rating}</span>
+              <span className="text-gray-400">({data.reviews})</span>
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <div className="pt-4 border-t border-gray-100">
+            <button className="w-full px-4 py-3 bg-linear-to-r from-[#FF385C] to-[#FF6B9D] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all duration-300 flex items-center justify-center gap-2 group-hover:gap-3">
+              <span>View Package Details</span>
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>
-          </Link>
+          </div>
         </div>
-      </div>
+      </Link>
     </motion.div>
   );
-};
-
-export default PackageCard;
+}

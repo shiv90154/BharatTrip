@@ -129,23 +129,21 @@ export default function Navbar() {
             {/* --------------------------------------  
                 ⭐ LOGO 
             --------------------------------------- */}
-        <Link href="/" className="flex-shrink-0">
+<Link href="/" className="flex-shrink-0">
   <motion.div
     whileHover={{ scale: 1.05 }}
     className="flex items-center gap-3 cursor-pointer"
   >
-    {/* Logo */}
-    <div className="relative w-9 h-9 sm:w-10 sm:h-10 md:w-10 md:h-10">
+    <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20">
       <Image
         src="/logo.png"
         alt="BharatTrip Logo"
         fill
         priority
-        className="rounded-xl object-cover shadow-sm"
+        className="object-contain"
       />
     </div>
 
-    {/* BharatTrip Text – Show on mobile/tablet ONLY */}
     <span className="font-bold text-gray-900 text-lg sm:text-xl tracking-tight lg:hidden">
       BharatTrip
     </span>

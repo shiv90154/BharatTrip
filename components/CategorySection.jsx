@@ -20,7 +20,7 @@ const CategorySection = ({ category, setCategory }) => {
     router.push(`/packages?category=${value}`);
   };
 
-  
+
   return (
     <section className="py-16 bg-gray-50/50">
       <div className="max-w-7xl mx-auto px-4">
@@ -31,7 +31,7 @@ const CategorySection = ({ category, setCategory }) => {
             Explore by <span className="text-rose-600">Category</span>
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Discover India's diverse landscapes and experiences through curated themes.
+            Discover Indias diverse landscapes and experiences through curated themes.
           </p>
         </div>
 

@@ -51,34 +51,40 @@ const FeaturedPackages = () => {
   ];
 
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10"
-        >
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
-              Featured Packages
-            </h2>
-            <p className="text-gray-600 mt-1">Handpicked experiences for unforgettable journeys</p>
-          </div>
-          <span className="bg-rose-100 text-rose-600 text-sm font-medium px-3 py-1 rounded-full flex items-center gap-2">
-            <Star size={14} className="fill-rose-600" />
-            Most Popular
-          </span>
-        </motion.div>
+<section className="py-20 bg-gradient-to-r from-rose-500 to-orange-500 text-white">
+  <div className="max-w-7xl mx-auto px-4 text-center">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredPackages.map((pkg, index) => (
-            <PackageCard key={index} pkg={pkg} index={index} isFeatured={true} />
-          ))}
-        </div>
+    <h2 className="text-3xl md:text-4xl font-bold mb-12">
+      Trusted By Travelers Across India
+    </h2>
+
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+      <div>
+        <div className="text-4xl font-bold">10K+</div>
+        <p>Happy Travelers</p>
       </div>
-    </section>
+
+      <div>
+        <div className="text-4xl font-bold">120+</div>
+        <p>Destinations</p>
+      </div>
+
+      <div>
+        <div className="text-4xl font-bold">800+</div>
+        <p>Trips Completed</p>
+      </div>
+
+      <div>
+        <div className="text-4xl font-bold">4.8★</div>
+        <p>Ratings</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
   );
 };
 

@@ -20,9 +20,10 @@ export default function Home() {
       <HeroSection />
        <TravelOfferMarquee />
       <CategorySection category={category} setCategory={setCategory} />
-      <FeaturedPackages />
+    
       <TrendingPackages />
       <FilterAndPackages />
+        <FeaturedPackages />
       <Testimonials />
       <WhyChooseUs />
       <Newsletter />

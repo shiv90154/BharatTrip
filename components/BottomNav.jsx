@@ -46,40 +46,39 @@ export default function BottomNav() {
     };
   }, []);
 
-  const tabs = [
-    { 
-      label: "Home", 
-      icon: Home, 
-      href: "/",
-      active: pathname === "/"
-    },
-    { 
-      label: "Packages", 
-      icon: Package, 
-      href: "/packages",
-      active: pathname === "/packages" || pathname.startsWith('/packages/')
-    },
-    { 
-      label: "Explore", 
-      icon: MapPin, 
-      href: "/destinations",
-      active: pathname === "/destinations" || pathname.startsWith('/destinations/')
-    },
-    { 
-      label: "Wishlist", 
-      icon: Heart, 
-      href: "/wishlist",
-      active: pathname === "/wishlist",
-      badge: wishlistCount > 0 ? wishlistCount : null
-    },
-    { 
-      label: user ? "Profile" : "Login", 
-      icon: User, 
-      href: user ? "/profile" : "#",
-      active: pathname === "/profile" || pathname === "/login",
-      requiresAuth: !user
-    },
-  ];
+ const tabs = [
+  { 
+    label: "Home", 
+    icon: Home, 
+    href: "/",
+    active: pathname === "/"
+  },
+  { 
+    label: "Packages", 
+    icon: Package, 
+    href: "/packages",
+    active: pathname === "/packages" || pathname.startsWith('/packages/')
+  },
+  { 
+    label: "Explore", 
+    icon: MapPin, 
+    href: "/destinations",
+    active: pathname === "/destinations" || pathname.startsWith('/destinations/')
+  },
+  { 
+    label: "Wishlist", 
+    icon: Heart, 
+    href: "/wishlist",
+    active: pathname === "/wishlist",
+    badge: wishlistCount > 0 ? wishlistCount : null
+  },
+  { 
+    label: user ? "Profile" : "Login", 
+    icon: User, 
+    href: user ? "/profile" : "/login",   // <-- FIXED
+    active: pathname === "/profile" || pathname === "/login",
+  },
+];
 
   // Handle hide/show on scroll
   useEffect(() => {
@@ -265,42 +264,7 @@ export default function BottomNav() {
             </div>
           </motion.button>
 
-          {/* Search Button */}
-          <motion.button
-            onClick={handleSearchClick}
-            whileTap={{ scale: 0.95 }}
-            className="flex flex-col items-center justify-center py-1 px-2 min-w-0 group relative"
-          >
-            <motion.div
-              animate={{
-                color: "#3b82f6",
-              }}
-              className="relative mb-1"
-            >
-              <Search size={20} />
-              
-              {/* Subtle glow effect */}
-              <motion.div
-                animate={{ 
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="absolute inset-0 bg-blue-500 rounded-full -z-10 opacity-20"
-              />
-            </motion.div>
-            
-            <span className="text-xs text-blue-600 font-medium">Search</span>
-
-            {/* Hover Tooltip */}
-            <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded-lg text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-              Search Packages
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1 w-2 h-2 bg-gray-900 rotate-45"></div>
-            </div>
-          </motion.button>
+      
         </div>
         
         {/* Safe area for iOS */}

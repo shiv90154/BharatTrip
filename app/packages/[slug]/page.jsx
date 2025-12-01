@@ -11,7 +11,7 @@ import {
   MapPin,
   Calendar,
   Star,
-  Users,
+  Users,  
   Heart,
 } from "lucide-react";
 
