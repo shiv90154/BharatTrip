@@ -1,10 +1,11 @@
-/** @type {import('next').NextConfig} */
+/** @type {import("next").NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
+  reactStrictMode: true,
+
+  // Next.js 16 experimental settings
+  typedRoutes: true,
+  experimental: {
+    optimizePackageImports: ["lucide-react"],
   },
 
   images: {
@@ -16,9 +17,20 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "source.unsplash.com",
-      }
+      },
     ],
+  },
+
+  // ❗ Remove unsupported keys (eslint + typescript)
+  // Next 16 handles both automatically. DO NOT ADD THESE FIELDS.
+
+  turbopack: {
+    root: __dirname,
+  },
+
+  devIndicators: {
+    buildActivity: true,
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

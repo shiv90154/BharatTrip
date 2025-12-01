@@ -4,13 +4,13 @@ import Navbar from "@/components/Navbar";
 import BottomNav from "@/components/BottomNav";
 import Footer from "@/components/Footer";
 import "./globals.css";
-
+import { AuthProvider } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { MessageCircle, ArrowUp, X, Calendar, MapPin, User, Phone, Mail, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
-
+import Navigation from '@/components/Navigation';
 export default function RootLayout({ children }) {
   const pathname = usePathname();
   const [showTop, setShowTop] = useState(false);
@@ -23,7 +23,26 @@ export default function RootLayout({ children }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Form values
+  // -----------------------------------------
+  // ✅ AUTO-POPUP FOR NEW USERS (Opens after 5 sec)
+  // -----------------------------------------
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisited");
+
+    if (!hasVisited) {
+      // First-time visitor -> Show popup after 5 seconds
+      const timer = setTimeout(() => {
+        setOpenPopup(true);
+        localStorage.setItem("hasVisited", "true");
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  // -----------------------------------------
+  // FORM STATE
+  // -----------------------------------------
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -31,7 +50,6 @@ export default function RootLayout({ children }) {
     destination: "",
     dates: "",
     travelers: "",
-    budget: "",
     message: "",
   });
 
@@ -62,7 +80,6 @@ export default function RootLayout({ children }) {
           destination: "",
           dates: "",
           travelers: "",
-          budget: "",
           message: "",
         });
         setOpenPopup(false);
@@ -70,7 +87,7 @@ export default function RootLayout({ children }) {
         alert(`❌ Failed to send enquiry: ${data.error || 'Please try again'}`);
       }
     } catch (error) {
-      console.error('Form submission error:', error);
+      console.error("Form submission error:", error);
       alert("❌ Network error! Please check your connection and try again.");
     }
   };
@@ -84,6 +101,9 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className="bg-white text-gray-900 overflow-x-hidden">
+
+<AuthProvider>
+ 
 
         <Navbar />
 
@@ -115,8 +135,6 @@ export default function RootLayout({ children }) {
             className="bg-green-500 p-3 md:p-4 rounded-full shadow-2xl flex items-center justify-center relative group"
           >
             <MessageCircle size={20} className="text-white" />
-            
-            {/* Ping Animation */}
             <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-20"></div>
           </Link>
         </motion.div>
@@ -138,20 +156,17 @@ export default function RootLayout({ children }) {
           )}
         </AnimatePresence>
 
-        {/* COMPACT PLAN YOUR TRIP BUTTON */}
+        {/* MANUAL HEART BUTTON */}
         <motion.button
           onClick={() => setOpenPopup(true)}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="fixed bottom-40 right-4 md:right-6 bg-gradient-to-r from-rose-600 to-rose-500 text-white px-4 py-3 md:px-5 md:py-4 rounded-full shadow-2xl font-semibold z-[999] border border-rose-400"
+          className="fixed bottom-40 right-4 md:right-6 bg-rose-600 text-white p-3 rounded-full shadow-2xl font-semibold z-[999] border border-rose-400"
         >
-          <div className="flex items-center gap-2">
-            <Heart className="w-4 h-4 md:w-5 md:h-5" fill="white" />
-            <span className="text-xs md:text-sm">Plan Trip</span>
-          </div>
+          <Heart className="w-5 h-5" fill="white" />
         </motion.button>
 
-        {/* COMPACT & RESPONSIVE POPUP FORM */}
+        {/* POPUP FORM */}
         <AnimatePresence>
           {openPopup && (
             <>
@@ -161,193 +176,116 @@ export default function RootLayout({ children }) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setOpenPopup(false)}
-                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000]"
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[1000]"
               />
 
-              {/* Compact Popup Container */}
+              {/* Popup Box */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                transition={{ 
-                  duration: 0.25, 
-                  ease: "easeOut" 
-                }}
-                className="
-                  fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                  bg-white border border-gray-200 shadow-2xl
-                  rounded-2xl p-0 w-[90%] max-w-sm md:max-w-md z-[1001]
-                  overflow-hidden max-h-[85vh] overflow-y-auto
-                "
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-sm bg-white rounded-xl shadow-2xl z-[1001] overflow-hidden"
               >
-                {/* Compact Header */}
-                <div className="bg-gradient-to-r from-rose-600 to-rose-500 p-4 text-white relative">
-                  {/* Close Button */}
-                  <button
-                    onClick={() => setOpenPopup(false)}
-                    className="absolute top-3 right-3 w-7 h-7 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200"
-                  >
-                    <X size={16} className="text-white" />
-                  </button>
-
-                  <div className="text-center pr-8">
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-3">
-                      <Heart className="w-6 h-6" fill="white" />
-                    </div>
-                    <h2 className="text-lg font-bold mb-1">
-                      Plan Your Trip ✈️
-                    </h2>
-                    <p className="text-rose-100 text-xs opacity-90">
-                      Get personalized itinerary
-                    </p>
+                {/* Header */}
+                <div className="bg-rose-600 p-4 text-white">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-lg">Plan Your Trip</h3>
+                    <button
+                      onClick={() => setOpenPopup(false)}
+                      className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
+                    >
+                      <X size={14} />
+                    </button>
                   </div>
+                  <p className="text-rose-100 text-sm mt-1">Get free itinerary in 2 hours</p>
                 </div>
 
-                {/* Compact Form Content */}
+                {/* Form */}
                 <div className="p-4">
                   <form onSubmit={submitForm} className="space-y-3">
-                    {/* Name */}
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                      <input
-                        name="name"
-                        value={form.name}
-                        onChange={handleChange}
-                        placeholder="Full Name *"
-                        required
-                        className="w-full pl-10 pr-3 py-3 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all duration-200 placeholder-gray-500"
-                      />
-                    </div>
+                    <input
+                      name="name"
+                      value={form.name}
+                      onChange={handleChange}
+                      placeholder="Your Name *"
+                      required
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all"
+                    />
 
-                    {/* Email */}
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                      <input
-                        name="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        type="email"
-                        placeholder="Email *"
-                        required
-                        className="w-full pl-10 pr-3 py-3 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all duration-200 placeholder-gray-500"
-                      />
-                    </div>
+                    <input
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      type="email"
+                      placeholder="Email *"
+                      required
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all"
+                    />
 
-                    {/* Phone */}
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                      <input
-                        name="phone"
-                        value={form.phone}
-                        onChange={handleChange}
-                        required
-                        placeholder="Phone *"
-                        className="w-full pl-10 pr-3 py-3 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all duration-200 placeholder-gray-500"
-                      />
-                    </div>
+                    <input
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      placeholder="Phone *"
+                      required
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all"
+                    />
 
-                    {/* Destination & Dates Row */}
+                    <input
+                      name="destination"
+                      value={form.destination}
+                      onChange={handleChange}
+                      placeholder="Where do you want to go?"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all"
+                    />
+
                     <div className="grid grid-cols-2 gap-2">
-                      <div className="relative">
-                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <input
-                          name="destination"
-                          value={form.destination}
-                          onChange={handleChange}
-                          placeholder="Destination"
-                          className="w-full pl-9 pr-2 py-3 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all duration-200 placeholder-gray-500"
-                        />
-                      </div>
-
-                      <div className="relative">
-                        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <input
-                          name="dates"
-                          value={form.dates}
-                          onChange={handleChange}
-                          placeholder="Dates"
-                          className="w-full pl-9 pr-2 py-3 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all duration-200 placeholder-gray-500"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Travelers & Budget Row */}
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <select
-                          name="travelers"
-                          value={form.travelers}
-                          onChange={handleChange}
-                          className="w-full pl-9 pr-2 py-3 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all duration-200 appearance-none text-gray-700"
-                        >
-                          <option value="">Travelers</option>
-                          <option value="1">1 Person</option>
-                          <option value="2">2 People</option>
-                          <option value="3-4">3-4 People</option>
-                          <option value="5+">5+ People</option>
-                        </select>
-                      </div>
-
-                      <div className="relative">
-                        <select
-                          name="budget"
-                          value={form.budget}
-                          onChange={handleChange}
-                          className="w-full px-3 py-3 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all duration-200 appearance-none text-gray-700"
-                        >
-                          <option value="">Budget</option>
-                          <option value="economy">Economy</option>
-                          <option value="standard">Standard</option>
-                          <option value="premium">Premium</option>
-                          <option value="luxury">Luxury</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* Message */}
-                    <div className="relative">
-                      <textarea
-                        name="message"
-                        value={form.message}
+                      <input
+                        name="dates"
+                        value={form.dates}
                         onChange={handleChange}
-                        rows="2"
-                        placeholder="Tell us about your trip..."
-                        className="w-full p-3 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all duration-200 resize-none placeholder-gray-500"
+                        placeholder="Travel Dates"
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all"
                       />
+
+                      <select
+                        name="travelers"
+                        value={form.travelers}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all"
+                      >
+                        <option value="">Travelers</option>
+                        <option value="1">1 Person</option>
+                        <option value="2">2 People</option>
+                        <option value="3-4">3-4 People</option>
+                        <option value="5+">5+ People</option>
+                      </select>
                     </div>
 
-                    {/* Submit Button */}
-                    <motion.button
+                    <textarea
+                      name="message"
+                      value={form.message}
+                      onChange={handleChange}
+                      rows="2"
+                      placeholder="Any special requirements?"
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all resize-none"
+                    />
+
+                    <button
                       type="submit"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="
-                        w-full bg-gradient-to-r from-rose-600 to-rose-500 
-                        hover:from-rose-700 hover:to-rose-600
-                        text-white py-3 rounded-lg 
-                        font-semibold transition-all duration-200 
-                        shadow-lg hover:shadow-xl
-                        flex items-center justify-center gap-2 text-sm
-                      "
+                      className="w-full bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-lg font-semibold transition-colors text-sm"
                     >
-                      <Heart className="w-4 h-4" fill="white" />
-                      Get Itinerary
-                    </motion.button>
-
-                    {/* Trust Badge */}
-                    <div className="text-center pt-3 border-t border-gray-100">
-                      <p className="text-[10px] text-gray-500">
-                        🔒 Secure & Private • Response in 2 hours
-                      </p>
-                    </div>
+                      Get Free Itinerary
+                    </button>
                   </form>
                 </div>
               </motion.div>
             </>
           )}
         </AnimatePresence>
-
+   
+        </AuthProvider>
       </body>
     </html>
   );

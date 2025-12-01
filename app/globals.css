@@ -1,2 +1,200 @@
+/* Import Tailwind */
+@import "tailwindcss";
 
-@import "tailwindcss"
+/* ---------------------------------------------------
+   🌈 Premium Text Selection
+--------------------------------------------------- */
+::selection {
+  background: rgba(244, 63, 94, 0.85); /* rose-500 */
+  color: white;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+}
+
+/* ---------------------------------------------------
+   ⚡ Smooth Scrolling Everywhere
+--------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ---------------------------------------------------
+   ✨ Premium Body Typography & Rendering
+--------------------------------------------------- */
+body {
+  color: #1f2937; /* gray-800 */
+  background-color: #ffffff;
+  font-feature-settings: "kern";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------------------------------------------------
+   📱 No Tap Highlight (Mobile Polish)
+--------------------------------------------------- */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------------------------------------------------
+   🖱 Smooth Hover & Tap Animations Everywhere
+--------------------------------------------------- */
+button,
+a {
+  transition: all 0.25s ease;
+}
+
+/* ---------------------------------------------------
+   ⭐ Glassmorphism Utility Class
+--------------------------------------------------- */
+.glass {
+  backdrop-filter: blur(18px);
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+/* ---------------------------------------------------
+   🎚 Premium Scrollbar
+--------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5); /* gray-400 */
+  border-radius: 12px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.65); /* gray-500 */
+}
+
+/* ---------------------------------------------------
+   📦 Card Hover Animations
+--------------------------------------------------- */
+.card-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+/* ---------------------------------------------------
+   💡 Soft Fade-In Animation Utility
+--------------------------------------------------- */
+.fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------------------------------------------
+   🔥 Page Transition Fade-In (Auto on route change)
+--------------------------------------------------- */
+.page-transition {
+  animation: fadePage 0.45s ease;
+}
+
+@keyframes fadePage {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------------------------------------------
+   🎯 Premium Input Style
+--------------------------------------------------- */
+.input-premium {
+  @apply border border-gray-300 rounded-lg px-3 py-2 text-sm;
+  transition: all 0.2s ease;
+}
+
+.input-premium:focus {
+  border-color: #fb7185;
+  box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.3);
+  outline: none;
+}
+
+/* ---------------------------------------------------
+   🔘 Premium Button Style
+--------------------------------------------------- */
+.btn-premium {
+  @apply bg-rose-600 text-white font-medium px-4 py-2 rounded-lg shadow-sm;
+  transition: all 0.25s ease;
+}
+
+.btn-premium:hover {
+  @apply bg-rose-700;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(244, 63, 94, 0.25);
+}
+
+.btn-premium:active {
+  transform: scale(0.97);
+}
+
+/* ---------------------------------------------------
+   💫 Subtle Glow Hover
+--------------------------------------------------- */
+.glow-hover:hover {
+  box-shadow: 0 0 14px rgba(244, 63, 94, 0.35);
+}
+
+/* ---------------------------------------------------
+   🌐 Global Layout Defaults (Safe)
+--------------------------------------------------- */
+.container-safe {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+/* Enhanced input styles */
+.input-premium {
+  @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white placeholder-gray-400 text-gray-900;
+}
+
+/* Enhanced button styles */
+.btn-premium {
+  @apply bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+}
+
+/* Fade in animation */
+.fade-in {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

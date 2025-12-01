@@ -2,131 +2,362 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import { Search, Filter, X, Star, MapPin, Calendar, Users, Heart, Shield, Award, Clock, ChevronDown } from "lucide-react";
-import Link from "next/link";
+import { Search, Filter, ChevronDown } from "lucide-react";
+import PackageCard from "@/components/packages/PackageCard";
+import FilterSection from "@/components/packages/FilterSection";
+import MobileFilters from "@/components/packages/MobileFilters";
+import TrustBadges from "@/components/packages/TrustBadges";
 
-// Package Card Component
-const PackageCard = ({ data }) => {
-  const [isLiked, setIsLiked] = useState(false);
+// Sample data
+export const packages = [
+  {
+    title: "Romantic Gateway to Shimla & Manali",
+    image: "/packages/RomanticGatewaytoShimla&Manali.avif",
+    slug: "romantic-shimla-manali-5n6d",
+    duration: "5N/6D",
+    price: 29000,
+    originalPrice: 34000,
+    discount: 15,
+    rating: 4.7,
+    reviews: 112,
+    location: "Shimla, Manali",
+    highlights: ["Kufri", "Mall Road", "Solang Valley", "Hadimba Temple"],
+    featured: true,
+    category: "honeymoon",
+    tags: ["Couple", "Honeymoon", "Romantic"]
+  },
 
-  return (
-    <motion.div
-      whileHover={{ y: -8 }}
-      className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all overflow-hidden border border-gray-100 group"
-    >
-      {/* Image Container */}
-      <div className="relative h-48 w-full overflow-hidden">
-        <img
-          src={data.image}
-          alt={data.title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-        />
-        
-        {/* Discount Badge */}
-        {data.discount && (
-          <span className="absolute top-4 right-4 bg-rose-600 text-white text-xs px-3 py-1 rounded-full shadow-lg font-semibold z-10">
-            {data.discount}% OFF
-          </span>
-        )}
+  {
+    title: "Highlights of Kashmir (Srinagar to Srinagar)",
+    image: "/packages/HighlightsOfKashmir(SrinagartoSrinagar).avif",
+    slug: "kashmir-srinagar-5n6d",
+    duration: "5N/6D",
+    price: 35000,
+    originalPrice: 39999,
+    discount: 12,
+    rating: 4.8,
+    reviews: 189,
+    location: "Srinagar, Gulmarg, Pahalgam",
+    highlights: ["Shikara Ride", "Gulmarg Gondola", "Mughal Gardens"],
+    featured: true,
+    category: "mountain",
+    tags: ["Family", "Nature", "Honeymoon"]
+  },
 
-        {/* Favorite Button */}
-        <button 
-          onClick={() => setIsLiked(!isLiked)}
-          className="absolute top-4 left-4 bg-white/90 hover:bg-white p-2 rounded-full shadow-md transition-all z-10"
-        >
-          <Heart 
-            size={18} 
-            className={isLiked ? "fill-rose-600 text-rose-600" : "text-gray-600 hover:text-rose-600"} 
-          />
-        </button>
+  {
+    title: "Highlights of Kashmir (Jammu to Jammu)",
+    image: "/packages/HighlightsofKashmir(JammutoJammu).avif",
+    slug: "kashmir-jammu-5n6d",
+    duration: "5N/6D",
+    price: 35000,
+    originalPrice: 40000,
+    discount: 12,
+    rating: 4.7,
+    reviews: 164,
+    location: "Jammu, Patnitop, Srinagar, Gulmarg",
+    highlights: ["Patnitop", "Houseboat Stay", "Valleys"],
+    featured: false,
+    category: "mountain",
+    tags: ["Family", "Nature", "Adventure"]
+  },
 
-        {/* Category Tag */}
-        <span className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm">
-          {data.category}
-        </span>
+  {
+    title: "Charming Shimla & Manali (Honeymoon)",
+    image: "/packages/CharmingShimla&Manali(Honeymoon.avif",
+    slug: "charming-shimla-manali-5n6d",
+    duration: "5N/6D",
+    price: 30000,
+    originalPrice: 34000,
+    discount: 12,
+    rating: 4.8,
+    reviews: 210,
+    location: "Shimla, Manali",
+    highlights: ["Candle Light Dinner", "Flower Decoration", "Solang Valley"],
+    featured: true,
+    category: "honeymoon",
+    tags: ["Honeymoon", "Couple", "Romantic"]
+  },
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-      </div>
+  {
+    title: "Beautiful Himachal Honeymoon",
+    image: "/packages/BeautifulHimachalHoneymoon.avif",
+    slug: "beautiful-himachal-honeymoon-8n9d",
+    duration: "8N/9D",
+    price: 42000,
+    originalPrice: 48000,
+    discount: 13,
+    rating: 4.9,
+    reviews: 155,
+    location: "Shimla, Manali, Dharamshala, Dalhousie",
+    highlights: ["Khajjiar", "Solang", "Romantic Decor"],
+    featured: true,
+    category: "honeymoon",
+    tags: ["Romantic", "Honeymoon", "Luxury"]
+  },
 
-      {/* Content */}
-      <div className="p-6">
-        <Link href={`/packages/${data.slug}`}>
-          <div className="flex items-start justify-between mb-3 cursor-pointer">
-            <h3 className="font-semibold text-lg text-gray-800 flex-1 pr-2 hover:text-rose-600 transition-colors">
-              {data.title}
-            </h3>
-            <div className="flex items-center gap-1 bg-rose-50 text-rose-600 px-2 py-1 rounded-full text-xs font-medium">
-              <Star size={12} className="fill-rose-600" />
-              {data.rating}
-            </div>
-          </div>
-        </Link>
+  {
+    title: "Exotic Manali by Volvo",
+    image: "/packages/ExoticManalibyVolvo.avif",
+    slug: "exotic-manali-volvo-3n4d",
+    duration: "3N/4D",
+    price: 26000,
+    originalPrice: 30000,
+    discount: 13,
+    rating: 4.5,
+    reviews: 98,
+    location: "Manali",
+    highlights: ["Solang Valley", "Mall Road", "Hadimba Temple"],
+    featured: false,
+    category: "mountain",
+    tags: ["Budget", "Family", "Volvo Trip"]
+  },
 
-        <p className="text-gray-500 text-sm mb-3 flex items-center gap-2">
-          <MapPin size={14} />
-          {data.location}
-        </p>
+  {
+    title: "Rajasthan MICE Tour",
+    image: "/packages/RajasthanMICETour.avif",
+    slug: "rajasthan-mice-tour-8n9d",
+    duration: "8N/9D",
+    price: 46000,
+    originalPrice: 52000,
+    discount: 12,
+    rating: 4.7,
+    reviews: 120,
+    location: "Jaipur, Bikaner, Jaisalmer, Jodhpur",
+    highlights: ["Corporate Events", "Desert Camp", "Fort Visits"],
+    featured: true,
+    category: "corporate",
+    tags: ["Corporate", "Luxury", "Group"]
+  },
 
-        {/* Highlights */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {data.highlights.slice(0, 3).map((h, i) => (
-            <span
-              key={i}
-              className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs"
-            >
-              {h}
-            </span>
-          ))}
-          {data.highlights.length > 3 && (
-            <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">
-              +{data.highlights.length - 3} more
-            </span>
-          )}
-        </div>
+  {
+    title: "Romantic Escape Manali & Dharamshala",
+    image: "/packages/RomanticEscapeManali&Dharamshala.avif",
+    slug: "romantic-manali-dharamshala-5n6d",
+    duration: "5N/6D",
+    price: 38000,
+    originalPrice: 42000,
+    discount: 10,
+    rating: 4.6,
+    reviews: 142,
+    location: "Manali, Dharamshala",
+    highlights: ["Tea Gardens", "Monasteries", "Solang Valley"],
+    featured: true,
+    category: "honeymoon",
+    tags: ["Couple", "Romantic", "Honeymoon"]
+  },
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1 mb-4">
-          {data.tags.map((tag, i) => (
-            <span
-              key={i}
-              className="px-2 py-1 bg-blue-50 text-blue-600 rounded-full text-xs border border-blue-100"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
+  {
+    title: "Adventurous Jaisalmer, Jodhpur & Udaipur",
+    image: "/packages/AdventurousJaisalmerJodhpur&Udaipur.avif",
+    slug: "jaisalmer-jodhpur-udaipur-6d",
+    duration: "6D",
+    price: 41000,
+    originalPrice: 46000,
+    discount: 11,
+    rating: 4.8,
+    reviews: 167,
+    location: "Jaisalmer, Jodhpur, Udaipur",
+    highlights: ["Camel Safari", "Desert Camp", "City Palace Udaipur"],
+    featured: true,
+    category: "cultural",
+    tags: ["Adventure", "Culture", "Family"]
+  },
 
-        {/* Price Section */}
-        <div className="flex justify-between items-end pt-4 border-t border-gray-100">
-          <div>
-            <p className="text-xs text-gray-500 mb-1">Starting from</p>
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-bold text-rose-600">
-                ₹{data.price.toLocaleString()}
-              </span>
-              {data.originalPrice && (
-                <span className="text-sm line-through text-gray-400">
-                  ₹{data.originalPrice.toLocaleString()}
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-              <Calendar size={12} />
-              {data.duration}
-            </p>
-          </div>
+  {
+    title: "Magical Udaipur Trip",
+    image: "/packages/MagicalUdaipurTrip.avif",
+    slug: "magical-udaipur-3n4d",
+    duration: "3N/4D",
+    price: 35000,
+    originalPrice: 39000,
+    discount: 10,
+    rating: 4.6,
+    reviews: 143,
+    location: "Udaipur",
+    highlights: ["City Palace", "Lake Pichola", "Boat Ride"],
+    featured: true,
+    category: "cultural",
+    tags: ["Family", "Luxury", "Cultural"]
+  },
 
-          <Link href={`/packages/${data.slug}`}>
-            <button className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
-              View Details
-            </button>
-          </Link>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
+  {
+    title: "Jaipur–Ranthambore–Pushkar–Jodhpur",
+    image: "/packages/Jaipur–Ranthambore–Pushkar–Jodhpur.avif",
+    slug: "jaipur-ranthambore-pushkar-jodhpur-6n7d",
+    duration: "6N/7D",
+    price: 45000,
+    originalPrice: 51000,
+    discount: 12,
+    rating: 4.7,
+    reviews: 176,
+    location: "Jaipur, Ranthambore, Pushkar, Jodhpur",
+    highlights: ["Tiger Safari", "Brahma Temple", "Mehrangarh Fort"],
+    featured: false,
+    category: "cultural",
+    tags: ["Wildlife", "Culture", "Family"]
+  },
+
+  {
+    title: "Stunning Kashmir Getaway",
+    image: "/packages/StunningKashmirGetaway.avif",
+    slug: "stunning-kashmir-3n4d",
+    duration: "3N/4D",
+    price: 20000,
+    originalPrice: 25000,
+    discount: 20,
+    rating: 4.8,
+    reviews: 220,
+    location: "Srinagar, Gulmarg",
+    highlights: ["Shikara Ride", "Mughal Gardens"],
+    featured: true,
+    category: "mountain",
+    tags: ["Budget", "Family", "Nature"]
+  },
+
+  {
+    title: "Kashmir Deluxe Tour",
+    image: "/packages/KashmirDeluxeTour.avif",
+    slug: "kashmir-deluxe-4n5d",
+    duration: "4N/5D",
+    price: 30000,
+    originalPrice: 36000,
+    discount: 17,
+    rating: 4.8,
+    reviews: 198,
+    location: "Srinagar, Sonmarg, Gulmarg",
+    highlights: ["Deluxe Hotels", "Gondola", "Shikara"],
+    featured: true,
+    category: "mountain",
+    tags: ["Luxury", "Family", "Nature"]
+  },
+
+  {
+    title: "Kashmir Delight with Valley of Milk",
+    image: "/packages/KashmirDelightwithValleyofMilk.avif",
+    slug: "kashmir-valley-of-milk-6n7d",
+    duration: "6N/7D",
+    price: 38000,
+    originalPrice: 43000,
+    discount: 12,
+    rating: 4.7,
+    reviews: 174,
+    location: "Srinagar, Pahalgam, Gurez",
+    highlights: ["Gurez Valley", "Bukit Top", "Shikara"],
+    featured: true,
+    category: "mountain",
+    tags: ["Nature", "Adventure", "Family"]
+  },
+
+  {
+    title: "Majestic Uttarakhand Tour",
+    image: "/packages/MajesticUttarakhandTour.avif",
+    slug: "majestic-uttarakhand-nainital-corbett-5n6d",
+    duration: "5N/6D",
+    price: 30000,
+    originalPrice: 34000,
+    discount: 12,
+    rating: 4.6,
+    reviews: 136,
+    location: "Nainital, Corbett",
+    highlights: ["Corbett Safari", "Naini Lake", "Mall Road"],
+    featured: false,
+    category: "mountain",
+    tags: ["Family", "Wildlife", "Hill Station"]
+  },
+
+  {
+    title: "Mysterious Mussoorie Escape",
+    image: "/packages/MysteriousMussoorieEscape.avif",
+    slug: "mussoorie-3n4d",
+    duration: "3N/4D",
+    price: 28000,
+    originalPrice: 31000,
+    discount: 10,
+    rating: 4.5,
+    reviews: 102,
+    location: "Mussoorie",
+    highlights: ["Kempty Falls", "Camel Back Road", "Mall Road"],
+    featured: false,
+    category: "mountain",
+    tags: ["Family", "Friends", "Budget"]
+  },
+
+  {
+    title: "Mystic Nainital Retreat",
+    image: "/packages/MysticNainitalRetre.avif",
+    slug: "nainital-3n4d",
+    duration: "3N/4D",
+    price: 20000,
+    originalPrice: 23000,
+    discount: 13,
+    rating: 4.6,
+    reviews: 128,
+    location: "Nainital",
+    highlights: ["Boating", "Snow View Point", "Hanuman Garhi"],
+    featured: false,
+    category: "mountain",
+    tags: ["Family", "Budget", "Nature"]
+  },
+
+  {
+    title: "Essence of Kerala",
+    image: "/packages/EssenceofKerala.avif",
+    slug: "essence-kerala-3n4d",
+    duration: "3N/4D",
+    price: 18000,
+    originalPrice: 23000,
+    discount: 20,
+    rating: 4.7,
+    reviews: 164,
+    location: "Munnar, Alleppey",
+    highlights: ["Houseboat", "Tea Gardens"],
+    featured: true,
+    category: "cultural",
+    tags: ["Family", "Relaxation", "Nature"]
+  },
+
+  {
+    title: "Captivating Kerala",
+    image: "/packages/CaptivatingKerala.avif",
+    slug: "captivating-kerala-5n6d",
+    duration: "5N/6D",
+    price: 27000,
+    originalPrice: 32000,
+    discount: 16,
+    rating: 4.8,
+    reviews: 198,
+    location: "Munnar, Thekkady, Alleppey",
+    highlights: ["Tea Plantations", "Houseboat", "Ayurveda"],
+    featured: true,
+    category: "cultural",
+    tags: ["Relaxing", "Family", "Nature"]
+  },
+
+  {
+    title: "Kerala Offbeat Tour",
+    image: "/packages/KeralaOffbeatTou.avif",
+    slug: "kerala-offbeat-4n5d",
+    duration: "4N/5D",
+    price: 31000,
+    originalPrice: 35000,
+    discount: 11,
+    rating: 4.6,
+    reviews: 142,
+    location: "Varkala, Wayanad, Alleppey",
+    highlights: ["Beaches", "Waterfalls", "Caves"],
+    featured: false,
+    category: "cultural",
+    tags: ["Adventure", "Nature", "Relaxing"]
+  }
+];
+
+const categories = [
+  { id: "all", name: "All Packages", count: packages.length, icon: "🌍" },
+  { id: "adventure", name: "Adventure", count: packages.filter(pkg => pkg.category === "adventure").length, icon: "🚵‍♂️" },
+  { id: "cultural", name: "Cultural", count: packages.filter(pkg => pkg.category === "cultural").length, icon: "🏯" },
+  { id: "beach", name: "Beach", count: packages.filter(pkg => pkg.category === "beach").length, icon: "🏖️" },
+  { id: "mountain", name: "Mountain", count: packages.filter(pkg => pkg.category === "mountain").length, icon: "⛰️" }
+];
 
 export default function Packages() {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -137,113 +368,8 @@ export default function Packages() {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedTags, setSelectedTags] = useState([]);
 
-  const categories = [
-    { id: "all", name: "All Packages", count: 12, icon: "🌍" },
-    { id: "adventure", name: "Adventure", count: 4, icon: "🚵‍♂️" },
-    { id: "cultural", name: "Cultural", count: 3, icon: "🏯" },
-    { id: "beach", name: "Beach", count: 2, icon: "🏖️" },
-    { id: "mountain", name: "Mountain", count: 2, icon: "⛰️" },
-    { id: "spiritual", name: "Spiritual", count: 1, icon: "🛕" }
-  ];
-
-  const packages = [
-    { 
-      title: "Kashmir 5N/6D", 
-      image: "https://images.unsplash.com/photo-1571624436279-b272aff752b5?w=500", 
-      slug: "kashmir-5n6d", 
-      duration: "5N/6D", 
-      price: 12999,
-      originalPrice: 15999,
-      discount: 19,
-      rating: 4.8,
-      reviews: 124,
-      location: "Srinagar, Gulmarg, Pahalgam",
-      highlights: ["Houseboat Stay", "Skiing", "Shikara Ride", "Mughal Gardens"],
-      featured: true,
-      category: "mountain",
-      tags: ["Family", "Honeymoon", "Adventure"]
-    },
-    { 
-      title: "Goa Beach Tour", 
-      image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=500", 
-      slug: "goa-tour", 
-      duration: "3N/4D", 
-      price: 8999,
-      originalPrice: 11999,
-      discount: 25,
-      rating: 4.5,
-      reviews: 89,
-      location: "North Goa, South Goa",
-      highlights: ["Beach Parties", "Water Sports", "Portuguese Heritage", "Nightlife"],
-      featured: false,
-      category: "beach",
-      tags: ["Party", "Beach", "Youth"]
-    },
-    { 
-      title: "Himachal Adventure", 
-      image: "https://images.unsplash.com/photo-1574362849221-71cad6d6fb34?w=500", 
-      slug: "himachal-adventure", 
-      duration: "6N/7D", 
-      price: 14999,
-      originalPrice: 18999,
-      discount: 21,
-      rating: 4.9,
-      reviews: 156,
-      location: "Manali, Kasol, Spiti Valley",
-      highlights: ["Trekking", "Camping", "Mountain Biking", "River Rafting"],
-      featured: true,
-      category: "adventure",
-      tags: ["Adventure", "Trekking", "Extreme"]
-    },
-    { 
-      title: "Kerala Backwaters", 
-      image: "https://images.unsplash.com/photo-1580619305218-8423a7ef79b4?w=500", 
-      slug: "kerala-backwaters", 
-      duration: "4N/5D", 
-      price: 10999,
-      originalPrice: 13999,
-      discount: 21,
-      rating: 4.7,
-      reviews: 203,
-      location: "Alleppey, Munnar, Kochi",
-      highlights: ["Houseboat", "Ayurveda", "Tea Plantations", "Kathakali"],
-      featured: false,
-      category: "cultural",
-      tags: ["Relaxing", "Cultural", "Family"]
-    },
-    { 
-      title: "Rajasthan Cultural", 
-      image: "https://images.unsplash.com/photo-1539590581446-74e33a6e2ab2?w=500", 
-      slug: "rajasthan-cultural", 
-      duration: "7N/8D", 
-      price: 17999,
-      originalPrice: 21999,
-      discount: 18,
-      rating: 4.6,
-      reviews: 178,
-      location: "Jaipur, Udaipur, Jodhpur",
-      highlights: ["Palace Stay", "Camel Safari", "Folk Dance", "Desert Camp"],
-      featured: true,
-      category: "cultural",
-      tags: ["Royal", "Cultural", "Luxury"]
-    },
-    { 
-      title: "Ladakh Road Trip", 
-      image: "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=500", 
-      slug: "ladakh-roadtrip", 
-      duration: "8N/9D", 
-      price: 21999,
-      originalPrice: 25999,
-      discount: 15,
-      rating: 4.9,
-      reviews: 267,
-      location: "Leh, Nubra Valley, Pangong",
-      highlights: ["Bike Trip", "High Altitude Lakes", "Monasteries", "Camping"],
-      featured: true,
-      category: "adventure",
-      tags: ["Adventure", "Biking", "Extreme"]
-    }
-  ];
+  // Get all unique tags
+  const allTags = [...new Set(packages.flatMap(pkg => pkg.tags))];
 
   // Filter packages based on active filters
   const filteredPackages = packages.filter(pkg => {
@@ -277,12 +403,9 @@ export default function Packages() {
       case "popular":
         return b.reviews - a.reviews;
       default: // featured
-        return (b.featured === a.featured) ? 0 : b.featured ? 1 : -1;
+        return (b.featured === a.featured) ? 0 : b.featured ? -1 : 1;
     }
   });
-
-  // Get all unique tags
-  const allTags = [...new Set(packages.flatMap(pkg => pkg.tags))];
 
   // Reset all filters
   const resetFilters = () => {
@@ -295,30 +418,29 @@ export default function Packages() {
   };
 
   return (
-    <div className="min-h-screen bg-white pt-20">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gray-50 pt-16">
+      <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
           <motion.span
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-rose-100 text-rose-700 rounded-full text-sm font-medium mb-6"
+            className="inline-flex items-center gap-2 px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-medium mb-4"
           >
-            <Award size={16} />
             ✈️ Explore Incredible Destinations
           </motion.span>
 
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-gray-900">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
             Travel Packages
           </h1>
 
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8 leading-relaxed">
+          <p className="text-gray-600 max-w-2xl mx-auto mb-6 leading-relaxed text-sm">
             Discover handpicked experiences with perfect blend of adventure, culture, and relaxation across incredible India
           </p>
 
@@ -329,21 +451,21 @@ export default function Packages() {
             transition={{ delay: 0.4 }}
             className="max-w-3xl mx-auto"
           >
-            <div className="relative bg-white rounded-xl shadow-sm border border-gray-200 p-2">
-              <div className="flex items-center gap-2">
-                <Search className="ml-4 text-gray-400" size={20} />
+            <div className="relative bg-white rounded-lg shadow-sm border border-gray-200 p-1">
+              <div className="flex items-center gap-1">
+                <Search className="ml-3 text-gray-400" size={18} />
                 <input
                   type="text"
-                  placeholder="Search destinations, activities, or locations..."
-                  className="flex-1 py-3 px-2 text-gray-700 placeholder-gray-500 bg-transparent outline-none"
+                  placeholder="Search destinations, activities..."
+                  className="flex-1 py-2 px-2 text-gray-700 placeholder-gray-500 bg-transparent outline-none text-sm"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <button 
                   onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center gap-2 px-4 py-3 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors text-sm"
+                  className="flex items-center gap-2 px-3 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors text-xs"
                 >
-                  <Filter size={18} />
+                  <Filter size={16} />
                   Filters
                 </button>
               </div>
@@ -352,228 +474,34 @@ export default function Packages() {
         </motion.div>
 
         {/* Main Content */}
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Enhanced Sidebar Filters - Desktop */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6 }}
-            className="hidden lg:block w-80 flex-shrink-0"
-          >
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-24">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                  <Filter size={20} />
-                  Filters
-                </h2>
-                <button
-                  onClick={resetFilters}
-                  className="text-sm text-rose-600 hover:text-rose-700 font-medium"
-                >
-                  Reset All
-                </button>
-              </div>
+        <div className="flex flex-col lg:flex-row gap-4">
+          {/* Sidebar Filters - Desktop */}
+          <div className="hidden lg:block w-64 flex-shrink-0">
+            <FilterSection
+              categories={categories}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+              priceRange={priceRange}
+              setPriceRange={setPriceRange}
+              durationFilter={durationFilter}
+              setDurationFilter={setDurationFilter}
+              selectedTags={selectedTags}
+              setSelectedTags={setSelectedTags}
+              allTags={allTags}
+              resetFilters={resetFilters}
+            />
+          </div>
 
-              {/* Categories */}
-              <div className="mb-6">
-                <h3 className="font-medium text-gray-700 mb-3">Categories</h3>
-                <div className="space-y-2">
-                  {categories.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => setActiveCategory(category.id)}
-                      className={`w-full flex items-center justify-between p-3 rounded-lg transition-all border text-sm ${
-                        activeCategory === category.id
-                          ? 'bg-rose-50 border-rose-200 text-rose-700'
-                          : 'bg-gray-50 border-gray-200 hover:bg-gray-100 text-gray-700'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg">{category.icon}</span>
-                        <span className="font-medium">{category.name}</span>
-                      </div>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        activeCategory === category.id ? 'bg-rose-100 text-rose-700' : 'bg-gray-200 text-gray-600'
-                      }`}>
-                        {category.count}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Price Range */}
-              <div className="mb-6">
-                <h3 className="font-medium text-gray-700 mb-3">Price Range</h3>
-                <div className="space-y-4">
-                  <input
-                    type="range"
-                    min="0"
-                    max="50000"
-                    step="1000"
-                    value={priceRange[1]}
-                    onChange={(e) => setPriceRange([0, Number(e.target.value)])}
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-rose-600"
-                  />
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>₹0</span>
-                    <span className="font-medium text-rose-600">₹{priceRange[1].toLocaleString()}+</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Duration */}
-              <div className="mb-6">
-                <h3 className="font-medium text-gray-700 mb-3">Duration</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { value: "all", label: "Any", icon: "🌎" },
-                    { value: "short", label: "Short", icon: "📅" },
-                    { value: "medium", label: "Medium", icon: "🗓️" },
-                    { value: "long", label: "Long", icon: "📆" }
-                  ].map((item) => (
-                    <button
-                      key={item.value}
-                      onClick={() => setDurationFilter(item.value)}
-                      className={`p-3 rounded-lg border transition-all text-center text-sm ${
-                        durationFilter === item.value
-                          ? 'bg-rose-50 border-rose-200 text-rose-700'
-                          : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
-                      }`}
-                    >
-                      <div className="text-lg mb-1">{item.icon}</div>
-                      <div className="font-medium">{item.label}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tags */}
-              <div className="mb-6">
-                <h3 className="font-medium text-gray-700 mb-3">Travel Style</h3>
-                <div className="flex flex-wrap gap-2">
-                  {allTags.map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => {
-                        setSelectedTags(prev =>
-                          prev.includes(tag)
-                            ? prev.filter(t => t !== tag)
-                            : [...prev, tag]
-                        );
-                      }}
-                      className={`px-3 py-2 rounded-lg text-xs font-medium transition-all border ${
-                        selectedTags.includes(tag)
-                          ? 'bg-rose-600 text-white border-rose-600'
-                          : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
-                      }`}
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Trust Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="mt-6 bg-gradient-to-r from-rose-50 to-orange-50 rounded-2xl p-6 border border-rose-100"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <Shield className="text-rose-600" size={20} />
-                <h3 className="font-semibold text-gray-800 text-sm">Book with Confidence</h3>
-              </div>
-              <p className="text-xs text-gray-600">
-                Best price guarantee, free cancellation, and 24/7 customer support for your peace of mind.
-              </p>
-            </motion.div>
-          </motion.div>
-
-          {/* Mobile Filters Modal */}
-          <AnimatePresence>
-            {showFilters && (
-              <>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-                  onClick={() => setShowFilters(false)}
-                />
-                <motion.div
-                  initial={{ x: "100%" }}
-                  animate={{ x: 0 }}
-                  exit={{ x: "100%" }}
-                  transition={{ type: "spring", damping: 30 }}
-                  className="fixed top-0 right-0 h-full w-80 bg-white z-50 lg:hidden overflow-y-auto"
-                >
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-lg font-semibold text-gray-800">Filters</h2>
-                      <button
-                        onClick={() => setShowFilters(false)}
-                        className="p-2 hover:bg-gray-100 rounded-lg"
-                      >
-                        <X size={20} />
-                      </button>
-                    </div>
-
-                    {/* Mobile filter content */}
-                    <div className="space-y-6">
-                      {/* Categories */}
-                      <div>
-                        <h3 className="font-medium text-gray-700 mb-3">Categories</h3>
-                        <div className="grid grid-cols-2 gap-2">
-                          {categories.map((category) => (
-                            <button
-                              key={category.id}
-                              onClick={() => setActiveCategory(category.id)}
-                              className={`p-3 rounded-lg border text-center text-sm ${
-                                activeCategory === category.id
-                                  ? 'bg-rose-50 border-rose-200 text-rose-700'
-                                  : 'bg-gray-50 border-gray-200'
-                              }`}
-                            >
-                              <div className="text-lg mb-1">{category.icon}</div>
-                              <div className="font-medium">{category.name}</div>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Sort */}
-                      <div>
-                        <h3 className="font-medium text-gray-700 mb-3">Sort By</h3>
-                        <select
-                          value={sortBy}
-                          onChange={(e) => setSortBy(e.target.value)}
-                          className="w-full p-3 border border-gray-300 rounded-lg bg-white text-sm"
-                        >
-                          <option value="featured">Featured</option>
-                          <option value="price-low">Price: Low to High</option>
-                          <option value="price-high">Price: High to Low</option>
-                          <option value="rating">Highest Rated</option>
-                          <option value="popular">Most Popular</option>
-                        </select>
-                      </div>
-
-                      {/* Apply Button */}
-                      <button
-                        onClick={() => setShowFilters(false)}
-                        className="w-full py-3 bg-rose-600 text-white rounded-lg font-semibold hover:bg-rose-700 transition-colors"
-                      >
-                        Apply Filters
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>
+          {/* Mobile Filters */}
+          <MobileFilters
+            showFilters={showFilters}
+            setShowFilters={setShowFilters}
+            categories={categories}
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />
 
           {/* Main Content */}
           <div className="flex-1">
@@ -581,27 +509,27 @@ export default function Packages() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6"
+              transition={{ delay: 0.6 }}
+              className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4"
             >
               <div>
-                <h2 className="text-xl font-semibold text-gray-800">
+                <h2 className="text-lg font-semibold text-gray-800">
                   {sortedPackages.length} {sortedPackages.length === 1 ? 'Package' : 'Packages'} Found
                 </h2>
-                <p className="text-gray-600 text-sm mt-1">
+                <p className="text-gray-600 text-xs mt-1">
                   {activeCategory !== "all" && `in ${categories.find(c => c.id === activeCategory)?.name}`}
                   {selectedTags.length > 0 && ` • ${selectedTags.length} travel style${selectedTags.length > 1 ? 's' : ''} selected`}
                 </p>
               </div>
 
               {/* Sort Options */}
-              <div className="flex items-center gap-4">
-                <span className="text-gray-600 text-sm hidden sm:block">Sort by:</span>
+              <div className="flex items-center gap-3">
+                <span className="text-gray-600 text-xs hidden sm:block">Sort by:</span>
                 <div className="relative">
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="appearance-none px-4 py-2 pr-8 border border-gray-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-rose-400 focus:border-transparent text-sm"
+                    className="appearance-none px-3 py-2 pr-6 border border-gray-300 rounded-lg bg-white shadow-sm focus:ring-1 focus:ring-rose-400 focus:border-transparent text-xs"
                   >
                     <option value="featured">Featured</option>
                     <option value="price-low">Price: Low to High</option>
@@ -609,7 +537,7 @@ export default function Packages() {
                     <option value="rating">Highest Rated</option>
                     <option value="popular">Most Popular</option>
                   </select>
-                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
+                  <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={14} />
                 </div>
               </div>
             </motion.div>
@@ -619,22 +547,22 @@ export default function Packages() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex flex-wrap gap-2 mb-6"
+                className="flex flex-wrap gap-1 mb-4"
               >
                 {activeCategory !== "all" && (
-                  <span className="inline-flex items-center gap-2 px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs">
+                  <span className="inline-flex items-center gap-1 px-2 py-1 bg-rose-100 text-rose-700 rounded-full text-xs">
                     {categories.find(c => c.id === activeCategory)?.name}
                     <button onClick={() => setActiveCategory("all")}>×</button>
                   </span>
                 )}
                 {selectedTags.map(tag => (
-                  <span key={tag} className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">
+                  <span key={tag} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">
                     {tag}
                     <button onClick={() => setSelectedTags(prev => prev.filter(t => t !== tag))}>×</button>
                   </span>
                 ))}
                 {durationFilter !== "all" && (
-                  <span className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs">
+                  <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">
                     {durationFilter} trips
                     <button onClick={() => setDurationFilter("all")}>×</button>
                   </span>
@@ -646,42 +574,33 @@ export default function Packages() {
             {sortedPackages.length > 0 ? (
               <motion.div
                 layout
-                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-6"
+                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
               >
                 <AnimatePresence>
                   {sortedPackages.map((pkg, index) => (
-                    <motion.div
-                      key={pkg.slug}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
-                      layout
-                    >
-                      <PackageCard data={pkg} />
-                    </motion.div>
+                    <PackageCard key={pkg.slug} data={pkg} index={index} />
                   ))}
                 </AnimatePresence>
               </motion.div>
             ) : (
-              /* Enhanced Empty State */
+              /* Empty State */
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-center py-16 bg-gray-50 rounded-2xl"
+                className="text-center py-12 bg-white rounded-xl"
               >
-                <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Search size={24} className="text-rose-600" />
+                <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Search size={20} className="text-rose-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   No packages found
                 </h3>
-                <p className="text-gray-600 mb-6 max-w-md mx-auto leading-relaxed text-sm">
-                  Try adjusting your filters or search terms to discover amazing travel packages tailored to your preferences.
+                <p className="text-gray-600 mb-4 max-w-md mx-auto leading-relaxed text-sm">
+                  Try adjusting your filters or search terms to discover amazing travel packages.
                 </p>
                 <button
                   onClick={resetFilters}
-                  className="px-6 py-3 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors font-semibold text-sm"
+                  className="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors font-semibold text-xs"
                 >
                   Reset All Filters
                 </button>
@@ -693,48 +612,19 @@ export default function Packages() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1 }}
-                className="text-center mt-12"
+                transition={{ delay: 0.8 }}
+                className="text-center mt-8"
               >
-                <button className="px-6 py-3 border-2 border-rose-600 text-rose-600 rounded-lg font-semibold hover:bg-rose-600 hover:text-white transition-all text-sm">
+                <button className="px-4 py-2 border border-rose-600 text-rose-600 rounded-lg font-semibold hover:bg-rose-600 hover:text-white transition-all text-xs">
                   Load More Packages
                 </button>
               </motion.div>
             )}
 
-            {/* Enhanced Trust Badges Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="mt-12 bg-gradient-to-r from-rose-50 to-orange-50 rounded-2xl p-6 shadow-sm border border-rose-100"
-            >
-              <h2 className="text-xl font-semibold text-center mb-6 text-gray-800">
-                Why Book With BharatTrip?
-              </h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {[
-                  { icon: <Award className="w-5 h-5" />, title: "Best Price", desc: "Guaranteed lowest prices" },
-                  { icon: <Shield className="w-5 h-5" />, title: "Secure Booking", desc: "SSL encrypted payments" },
-                  { icon: <Star className="w-5 h-5" />, title: "4.8/5 Rating", desc: "From 5000+ travelers" },
-                  { icon: <Clock className="w-5 h-5" />, title: "24/7 Support", desc: "Always here to help" }
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    whileHover={{ scale: 1.05 }}
-                    className="text-center p-4 bg-white rounded-xl shadow-sm border border-gray-100"
-                  >
-                    <div className="w-10 h-10 bg-rose-100 rounded-lg flex items-center justify-center text-rose-600 mx-auto mb-3">
-                      {item.icon}
-                    </div>
-                    <h3 className="font-medium text-gray-800 mb-1 text-sm">{item.title}</h3>
-                    <p className="text-xs text-gray-600">{item.desc}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+            {/* Trust Badges Section */}
+            <div className="mt-8">
+              <TrustBadges />
+            </div>
           </div>
         </div>
       </div>

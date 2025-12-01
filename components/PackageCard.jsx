@@ -1,277 +1,93 @@
 "use client";
 
-import { 
-  Card, 
-  CardMedia, 
-  CardContent, 
-  CardActions, 
-  Typography, 
-  Button, 
-  Box, 
-  Chip,
-  Rating,
-  IconButton,
-  useTheme,
-  alpha
-} from '@mui/material';
-import { 
-  Favorite, 
-  FavoriteBorder, 
-  LocationOn, 
-  AccessTime,
-  People,
-  FlashOn
-} from '@mui/icons-material';
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+import { motion } from "framer-motion";
+import { MapPin, Star, Heart } from "lucide-react";
 
-export default function PackageCard({ data, featured, delay = 0 }) {
-  const theme = useTheme();
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-
-  // Ensure fallback values (fix for highlights undefined)
-  const highlights = data?.highlights ?? [];
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), delay);
-    return () => clearTimeout(timer);
-  }, [delay]);
-
-  const handleFavorite = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsFavorite(!isFavorite);
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
-    }
-  };
-
+const PackageCard = ({ pkg, index, isFeatured = false }) => {
   return (
     <motion.div
-      variants={cardVariants}
-      initial="hidden"
-      animate={isVisible ? "visible" : "hidden"}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: index * 0.1 }}
+      viewport={{ once: true }}
+      whileHover={{ y: -5 }}
+      className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all overflow-hidden border border-gray-100 group"
     >
-      <Card 
-        sx={{ 
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          transition: 'all 0.3s ease-in-out',
-          borderRadius: 3,
-          overflow: 'visible',
-          background: featured 
-            ? `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.02)} 0%, ${alpha(theme.palette.secondary.main, 0.02)} 100%)`
-            : 'background.paper',
-          border: featured ? `2px solid ${alpha(theme.palette.primary.main, 0.2)}` : 'none',
-          boxShadow: featured 
-            ? `0 8px 32px ${alpha(theme.palette.primary.main, 0.1)}`
-            : '0 4px 20px rgba(0,0,0,0.08)',
-          '&:hover': {
-            transform: 'translateY(-8px)',
-            boxShadow: featured 
-              ? `0 20px 40px ${alpha(theme.palette.primary.main, 0.15)}`
-              : '0 12px 30px rgba(0,0,0,0.15)',
-          }
-        }}
-      >
-        {/* Image Section */}
-        <Box sx={{ position: 'relative', pt: 2, px: 2 }}>
-          {featured && (
-            <Chip 
-              icon={<FlashOn />}
-              label="Featured" 
-              color="primary" 
-              size="small"
-              sx={{ 
-                position: 'absolute',
-                top: 16,
-                left: 16,
-                zIndex: 2,
-                fontWeight: 'bold'
-              }}
-            />
-          )}
-          
-          {data?.discount > 0 && (
-            <Chip 
-              label={`${data.discount}% OFF`} 
-              color="error" 
-              size="small"
-              sx={{ 
-                position: 'absolute',
-                top: 16,
-                right: 16,
-                zIndex: 2,
-                fontWeight: 'bold'
-              }}
-            />
-          )}
+      {/* Image Container */}
+      <div className="relative h-48 w-full overflow-hidden">
+        <img
+          src={pkg.image}
+          alt={pkg.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+        
+        {/* Discount Badge */}
+        {pkg.discount && (
+          <span className="absolute top-3 right-3 bg-rose-600 text-white text-xs px-2 py-1 rounded-full shadow-lg font-semibold">
+            {pkg.discount}% OFF
+          </span>
+        )}
 
-          <CardMedia
-            component="img"
-            height="200"
-            image={data?.image}
-            alt={data?.title}
-            sx={{ 
-              borderRadius: 2,
-              objectFit: 'cover'
-            }}
-          />
+        {/* Favorite Button */}
+        <button className="absolute top-3 left-3 bg-white/90 hover:bg-white p-2 rounded-full shadow-md transition-all">
+          <Heart size={16} className="text-gray-600 hover:text-rose-600" />
+        </button>
 
-          <IconButton
-            sx={{
-              position: 'absolute',
-              bottom: -20,
-              right: 16,
-              backgroundColor: theme.palette.background.paper,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-              '&:hover': {
-                backgroundColor: theme.palette.background.paper,
-                transform: 'scale(1.1)'
-              }
-            }}
-            onClick={handleFavorite}
-          >
-            {isFavorite ? (
-              <Favorite color="error" />
-            ) : (
-              <FavoriteBorder />
-            )}
-          </IconButton>
-        </Box>
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+      </div>
 
-        <CardContent sx={{ flexGrow: 1, p: 3, pt: 4 }}>
-          {/* Title and Rating */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-            <Typography 
-              variant="h6" 
-              component="h3" 
-              sx={{ 
-                fontWeight: 'bold',
-                lineHeight: 1.2,
-                pr: 1
-              }}
+      {/* Content */}
+      <div className="p-5">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="font-bold text-lg text-gray-800 flex-1">{pkg.title}</h3>
+          <div className="flex items-center gap-1 bg-rose-50 text-rose-600 px-2 py-1 rounded-full text-xs font-medium">
+            <Star size={12} className="fill-rose-600" />
+            {pkg.rating}
+          </div>
+        </div>
+
+        <p className="text-gray-500 text-sm mb-3 flex items-center gap-1">
+          <MapPin size={14} />
+          {pkg.location}
+        </p>
+
+        {/* Highlights */}
+        <div className="flex flex-wrap gap-1 mb-4">
+          {pkg.highlights.slice(0, 3).map((h, i) => (
+            <span
+              key={i}
+              className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs"
             >
-              {data?.title}
-            </Typography>
-            
-            <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-              <Rating value={data?.rating} size="small" readOnly />
-              <Typography variant="body2" color="text.secondary" sx={{ ml: 0.5 }}>
-                ({data?.reviews})
-              </Typography>
-            </Box>
-          </Box>
+              {h}
+            </span>
+          ))}
+        </div>
 
-          {/* Location */}
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 1 }}>
-            <LocationOn color="primary" fontSize="small" />
-            <Typography variant="body2" color="text.secondary">
-              {data?.location}
-            </Typography>
-          </Box>
+        {/* Price Section */}
+        <div className="flex justify-between items-end">
+          <div>
+            <p className="text-xs text-gray-500 mb-1">Starting from</p>
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-bold text-rose-600">
+                ₹{pkg.price.toLocaleString()}
+              </span>
+              {pkg.originalPrice && (
+                <span className="text-sm line-through text-gray-400">
+                  ₹{pkg.originalPrice.toLocaleString()}
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-gray-500 mt-1">{pkg.duration}</p>
+          </div>
 
-          {/* Duration */}
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 1 }}>
-            <AccessTime color="secondary" fontSize="small" />
-            <Typography variant="body2" color="text.secondary">
-              {data?.duration}
-            </Typography>
-          </Box>
-
-          {/* Highlights */}
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-              Highlights:
-            </Typography>
-
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {highlights.map((highlight, index) => (
-                <Chip
-                  key={index}
-                  label={highlight}
-                  size="small"
-                  variant="outlined"
-                  sx={{ 
-                    fontSize: '0.7rem',
-                    height: 24
-                  }}
-                />
-              ))}
-            </Box>
-          </Box>
-
-          {/* Price Section */}
-          <Box sx={{ mt: 'auto' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-              <Box>
-                <Typography 
-                  variant="h5" 
-                  component="div" 
-                  sx={{ 
-                    fontWeight: 'bold',
-                    color: 'primary.main'
-                  }}
-                >
-                  ₹{data?.price?.toLocaleString()}
-                </Typography>
-
-                {data?.originalPrice > data?.price && (
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
-                      textDecoration: 'line-through',
-                      color: 'text.disabled'
-                    }}
-                  >
-                    ₹{data.originalPrice.toLocaleString()}
-                  </Typography>
-                )}
-              </Box>
-              
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <People fontSize="small" color="action" />
-                <Typography variant="body2" color="text.secondary">
-                  {Math.floor(Math.random() * 50) + 10} booked
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-        </CardContent>
-
-        {/* Button */}
-        <CardActions sx={{ p: 3, pt: 0 }}>
-          <Button
-            component={Link}
-            href={`/packages/${data?.slug}`}
-            variant="contained"
-            fullWidth
-            size="large"
-            sx={{
-              borderRadius: 2,
-              py: 1.5,
-              fontWeight: 'bold',
-              background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.3)}`,
-              },
-              transition: 'all 0.3s ease'
-            }}
-          >
-            View Details
-          </Button>
-        </CardActions>
-      </Card>
+          <button className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
+            {isFeatured ? "View Details" : "Book Now"}
+          </button>
+        </div>
+      </div>
     </motion.div>
   );
-}
+};
+
+export default PackageCard;

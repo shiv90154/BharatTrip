@@ -5,20 +5,14 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
-/* -------------------------------------
-   SAMPLE BLOG DATA (API SIMULATION)
--------------------------------------- */
-
 const blogDetails = {
   "best-places-india": {
     title: "10 Best Places to Visit in India - Ultimate Travel Guide 2024",
     slug: "best-places-india",
-    excerpt:
-      "Discover India's most breathtaking destinations—from snow-capped Himalayas to tropical beaches of Goa and cultural wonders of Rajasthan.",
+    excerpt: "Discover India's most breathtaking destinations—from snow-capped Himalayas to tropical beaches of Goa and cultural wonders of Rajasthan.",
     icon: "🏔️",
     author: "Travel Explorer",
-    authorBio:
-      "Seasoned traveler with 10+ years exploring India's hidden gems and top destinations. Passionate about sustainable tourism.",
+    authorBio: "Seasoned traveler with 10+ years exploring India's hidden gems and top destinations. Passionate about sustainable tourism.",
     date: "Mar 15, 2024",
     readTime: "8 min read",
     category: "destinations",
@@ -57,12 +51,10 @@ const blogDetails = {
     `,
     relatedBlogs: ["goa-guide", "budget-india", "rajasthan-heritage"],
   },
-
   "goa-guide": {
     title: "Goa Travel Guide: Beaches, Nightlife & Portuguese Culture",
     slug: "goa-guide",
-    excerpt:
-      "Everything you need to know about planning the perfect Goa vacation - from stunning beaches to Portuguese heritage and delicious cuisine.",
+    excerpt: "Everything you need to know about planning the perfect Goa vacation - from stunning beaches to Portuguese heritage and delicious cuisine.",
     icon: "🏖️",
     author: "Beach Lover",
     authorBio: "Travel writer living in Goa for 6+ years. Expert in Goan culture and hidden beach spots.",
@@ -98,7 +90,6 @@ const blogDetails = {
     `,
     relatedBlogs: ["best-places-india", "indian-street-food"],
   },
-
   "budget-india": {
     title: "Budget Travel Tips: How to Explore India for Under ₹1000/Day",
     slug: "budget-india",
@@ -140,21 +131,15 @@ const blogDetails = {
   }
 };
 
-/* -------------------------------------
-        MAIN BLOG DETAIL PAGE
--------------------------------------- */
-
 export default function BlogDetail() {
   const { slug } = useParams();
   const [blog, setBlog] = useState(null);
   const [relatedBlogs, setRelatedBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
-  // Load blog
   useEffect(() => {
     setTimeout(() => {
       const b = blogDetails[slug];
@@ -167,22 +152,35 @@ export default function BlogDetail() {
         );
       }
       setLoading(false);
-    }, 700);
+    }, 600);
   }, [slug]);
 
-  if (loading)
+  const share = (platform) => {
+    const url = window.location.href;
+    const text = blog.title;
+    const links = {
+      twitter: `https://twitter.com/share?text=${text}&url=${url}`,
+      facebook: `https://facebook.com/sharer/sharer.php?u=${url}`,
+      linkedin: `https://linkedin.com/sharing/share-offsite/?url=${url}`,
+    };
+    window.open(links[platform], "_blank");
+    setShowShareMenu(false);
+  };
+
+  if (loading) {
     return (
-      <div className="h-screen flex justify-center items-center bg-white">
+      <div className="min-h-screen bg-white pt-20 flex justify-center items-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-rose-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <h2 className="text-xl font-semibold text-gray-800">Loading Article...</h2>
         </div>
       </div>
     );
+  }
 
-  if (!blog)
+  if (!blog) {
     return (
-      <div className="text-center py-40 bg-white text-gray-600">
+      <div className="min-h-screen bg-white pt-20 flex flex-col items-center justify-center text-gray-600">
         <h2 className="text-2xl font-semibold mb-4">Article Not Found</h2>
         <Link
           href="/blogs"
@@ -192,30 +190,11 @@ export default function BlogDetail() {
         </Link>
       </div>
     );
-
-  /* SHARE MENU HANDLER */
-  const share = (platform) => {
-    const url = window.location.href;
-    const text = blog.title;
-
-    const links = {
-      twitter: `https://twitter.com/share?text=${text}&url=${url}`,
-      facebook: `https://facebook.com/sharer/sharer.php?u=${url}`,
-      linkedin: `https://linkedin.com/sharing/share-offsite/?url=${url}`,
-    };
-
-    window.open(links[platform], "_blank");
-    setShowShareMenu(false);
-  };
-
-  /* -------------------------------------
-            MAIN RETURN UI
-  -------------------------------------- */
+  }
 
   return (
-    <div className="min-h-screen bg-white pt-20 pb-20">
-      <div className="max-w-4xl mx-auto px-4">
-
+    <div className="min-h-screen bg-white pt-20 pb-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <motion.nav
           initial={{ opacity: 0 }}
@@ -236,15 +215,14 @@ export default function BlogDetail() {
           className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 mb-8"
         >
           {/* Hero Icon Image */}
-          <div className="bg-gradient-to-br from-rose-100 to-orange-100 h-48 flex justify-center items-center text-6xl">
+          <div className="bg-gradient-to-br from-rose-100 to-orange-100 h-40 sm:h-48 flex justify-center items-center text-5xl sm:text-6xl">
             {blog.icon}
           </div>
 
           {/* BLOG CONTENT HEADER */}
           <div className="p-6">
-
             {/* Meta */}
-            <div className="flex flex-wrap justify-between text-sm text-gray-600 mb-4">
+            <div className="flex flex-wrap justify-between text-sm text-gray-600 mb-4 gap-2">
               <div className="flex items-center space-x-3">
                 <span>{blog.date}</span>
                 <span>•</span>
@@ -261,7 +239,7 @@ export default function BlogDetail() {
             </div>
 
             {/* Title */}
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-tight">
               {blog.title}
             </h1>
 
@@ -283,8 +261,7 @@ export default function BlogDetail() {
             </div>
 
             {/* BUTTONS */}
-            <div className="flex items-center gap-3 border-t border-gray-100 pt-6">
-
+            <div className="flex items-center gap-3 border-t border-gray-100 pt-6 flex-wrap">
               {/* Like */}
               <button
                 onClick={() => setIsLiked(!isLiked)}
@@ -371,7 +348,7 @@ export default function BlogDetail() {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-sm p-8 mb-8 prose prose-lg max-w-none border border-gray-100"
+          className="bg-white rounded-2xl shadow-sm p-6 sm:p-8 mb-8 prose prose-lg max-w-none border border-gray-100"
         >
           <div 
             className="prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-p:leading-relaxed 
@@ -385,7 +362,7 @@ export default function BlogDetail() {
 
         {/* RELATED BLOGS */}
         {relatedBlogs.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-sm p-8 mb-8 border border-gray-100">
+          <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8 mb-8 border border-gray-100">
             <h3 className="text-xl font-bold mb-6 text-gray-900">📚 Related Articles</h3>
 
             <div className="grid md:grid-cols-2 gap-4">
@@ -411,8 +388,8 @@ export default function BlogDetail() {
         )}
 
         {/* NEWSLETTER CTA */}
-        <div className="bg-gradient-to-r from-rose-500 to-orange-500 rounded-2xl p-8 text-center text-white shadow-lg">
-          <h3 className="text-2xl font-bold mb-3">
+        <div className="bg-gradient-to-r from-rose-500 to-orange-500 rounded-2xl p-6 sm:p-8 text-center text-white shadow-lg">
+          <h3 className="text-xl sm:text-2xl font-bold mb-3">
             Enjoyed this article?
           </h3>
           <p className="text-rose-100 mb-6 text-sm">
@@ -429,7 +406,6 @@ export default function BlogDetail() {
             </button>
           </div>
         </div>
-
       </div>
     </div>
   );

@@ -41,49 +41,31 @@ export default function Footer() {
   ];
 
   const socials = [
-    { 
-      icon: <Facebook size={16} />, 
-      href: "#", 
-      name: "Facebook",
-    },
-    { 
-      icon: <Instagram size={16} />, 
-      href: "#", 
-      name: "Instagram",
-    },
-    { 
-      icon: <Twitter size={16} />, 
-      href: "#", 
-      name: "Twitter",
-    },
+    { icon: <Facebook size={15} />, href: "#", name: "Facebook" },
+    { icon: <Instagram size={15} />, href: "#", name: "Instagram" },
+    { icon: <Twitter size={15} />, href: "#", name: "Twitter" },
   ];
 
   const fadeUp = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+    hidden: { opacity: 0, y: 10 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.35 } },
   };
 
   const stagger = {
-    show: {
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
+    show: { transition: { staggerChildren: 0.08 } }
   };
 
   const handleSubscribe = (e) => {
     e.preventDefault();
     if (email) {
       setIsSubscribed(true);
-      setTimeout(() => setIsSubscribed(false), 3000);
+      setTimeout(() => setIsSubscribed(false), 2500);
       setEmail("");
     }
   };
 
   return (
-    <footer className="relative bg-white text-gray-800 border-t border-gray-200 pt-16 pb-8">
-      
-      {/* Main Footer Content */}
+    <footer className="bg-white text-gray-800 border-t border-gray-200 pt-12 pb-6">
       <motion.div
         initial="hidden"
         whileInView="show"
@@ -91,39 +73,33 @@ export default function Footer() {
         viewport={{ once: true }}
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12 mb-12">
+        {/* GRID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 mb-10">
 
-          {/* Brand Column */}
-          <motion.div
-            variants={fadeUp}
-            className="lg:col-span-2"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-lg bg-rose-500 flex items-center justify-center shadow-sm">
-                <span className="text-white font-bold text-sm">BT</span>
+          {/* BRAND */}
+          <motion.div variants={fadeUp} className="lg:col-span-2">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-lg bg-rose-500 flex items-center justify-center shadow-sm">
+                <span className="text-white font-bold text-xs">BT</span>
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">
-                  BharatTrip
-                </h2>
-                <p className="text-sm text-gray-600">Explore Incredible India</p>
+                <h2 className="text-lg font-semibold text-gray-900">BharatTrip</h2>
+                <p className="text-xs text-gray-600">Explore Incredible India</p>
               </div>
             </div>
 
-            <p className="text-gray-600 leading-relaxed mb-6 text-sm">
-              Discover authentic Indian experiences with curated travel packages. 
-              From Himalayan adventures to coastal retreats.
+            <p className="text-gray-600 text-sm leading-relaxed mb-4">
+              Discover authentic Indian experiences with curated travel packages —
+              from mountains to beaches.
             </p>
 
-            {/* Social Links */}
             <div className="flex gap-2">
               {socials.map((social, i) => (
                 <motion.a
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                   key={i}
                   href={social.href}
-                  className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all duration-300 text-gray-600"
+                  whileHover={{ scale: 1.05 }}
+                  className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600 transition"
                   aria-label={social.name}
                 >
                   {social.icon}
@@ -132,17 +108,17 @@ export default function Footer() {
             </div>
           </motion.div>
 
-          {/* Quick Links */}
+          {/* QUICK LINKS */}
           <motion.div variants={fadeUp}>
-            <h3 className="text-sm font-semibold mb-4 text-gray-900 uppercase tracking-wide">
+            <h3 className="text-xs font-semibold mb-3 uppercase tracking-wide text-gray-900">
               Quick Links
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-1.5">
               {links.map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-600 hover:text-rose-500 transition-all duration-300 text-sm hover:pl-1"
+                    className="text-gray-600 hover:text-rose-500 transition text-sm"
                   >
                     {link.name}
                   </Link>
@@ -151,71 +127,68 @@ export default function Footer() {
             </ul>
           </motion.div>
 
-          {/* Destinations */}
+          {/* DESTINATIONS */}
           <motion.div variants={fadeUp}>
-            <h3 className="text-sm font-semibold mb-4 text-gray-900 uppercase tracking-wide">
+            <h3 className="text-xs font-semibold mb-3 uppercase tracking-wide text-gray-900">
               Destinations
             </h3>
-            <ul className="space-y-2">
-              {destinations.map((destination) => (
-                <li key={destination.name}>
+            <ul className="space-y-1.5">
+              {destinations.map((d) => (
+                <li key={d.name}>
                   <Link
-                    href={destination.href}
-                    className="text-gray-600 hover:text-rose-500 transition-all duration-300 text-sm hover:pl-1"
+                    href={d.href}
+                    className="text-gray-600 hover:text-rose-500 transition text-sm"
                   >
-                    {destination.name}
+                    {d.name}
                   </Link>
                 </li>
               ))}
             </ul>
           </motion.div>
 
-          {/* Contact & Newsletter */}
+          {/* CONTACT + NEWSLETTER */}
           <motion.div variants={fadeUp}>
-            <h3 className="text-sm font-semibold mb-4 text-gray-900 uppercase tracking-wide">
-              Contact & Newsletter
+            <h3 className="text-xs font-semibold mb-3 uppercase tracking-wide text-gray-900">
+              Contact & Updates
             </h3>
 
-            {/* Contact Info */}
-            <div className="space-y-3 text-gray-600 mb-6 text-sm">
+            <div className="space-y-2 text-gray-600 text-sm mb-4">
               <div className="flex items-center gap-2">
-                <Phone size={14} className="text-rose-500" />
-                <div>
-                  <Link href="tel:+918894322900" className="block hover:text-rose-500 transition-colors">
-                    +91 88943 22900
-                  </Link>
-                </div>
+                <Phone size={13} className="text-rose-500" />
+                <Link href="tel:+918894322900" className="hover:text-rose-500">
+                  +91 88943 22900
+                </Link>
               </div>
 
               <div className="flex items-center gap-2">
-                <Mail size={14} className="text-rose-500" />
-                <Link href="mailto:info@bharattrip.net" className="hover:text-rose-500 transition-colors">
+                <Mail size={13} className="text-rose-500" />
+                <Link href="mailto:info@bharattrip.net" className="hover:text-rose-500">
                   info@bharattrip.net
                 </Link>
               </div>
 
               <div className="flex items-start gap-2">
-                <MapPin size={14} className="text-rose-500 mt-0.5" />
-                <p className="text-xs">
-                  Kehloor Bhawan Shakti Vihar, Panthghati - 171009
-                </p>
+                <MapPin size={13} className="text-rose-500 mt-0.5" />
+                <p className="text-xs">Kehloor Bhawan Shakti Vihar, Panthghati - 171009</p>
               </div>
             </div>
 
             {/* Newsletter */}
-            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-              <h4 className="font-medium text-gray-900 mb-2 text-sm">Get Travel Updates</h4>
+            <div className="bg-gray-50 rounded-xl p-3 border border-gray-200">
+              <h4 className="font-medium text-gray-900 mb-2 text-sm">
+                Get Travel Updates
+              </h4>
 
               <AnimatePresence mode="wait">
                 {isSubscribed ? (
-                  <motion.div
+                  <motion.p
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    className="text-center py-2"
+                    className="text-green-600 text-sm text-center py-1"
                   >
-                    <p className="text-green-600 text-sm font-medium">Thank you for subscribing!</p>
-                  </motion.div>
+                    Thanks for subscribing!
+                  </motion.p>
                 ) : (
                   <motion.form
                     initial={{ opacity: 1 }}
@@ -227,7 +200,7 @@ export default function Footer() {
                       type="email"
                       required
                       placeholder="Your email"
-                      className="flex-1 p-2 bg-white border border-gray-300 text-gray-800 placeholder-gray-400 rounded-lg outline-none focus:ring-1 focus:ring-rose-500 focus:border-rose-500 text-sm"
+                      className="flex-1 p-2 bg-white border border-gray-300 text-sm rounded-lg outline-none focus:ring-1 focus:ring-rose-500"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
@@ -235,9 +208,9 @@ export default function Footer() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       type="submit"
-                      className="p-2 bg-rose-500 hover:bg-rose-600 rounded-lg text-white transition-all duration-300"
+                      className="p-2 bg-rose-500 hover:bg-rose-600 rounded-lg text-white"
                     >
-                      <Send size={16} />
+                      <Send size={15} />
                     </motion.button>
                   </motion.form>
                 )}
@@ -247,43 +220,35 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="border-t border-gray-200 my-8"
-        />
+        <div className="border-t border-gray-200 my-6" />
 
-        {/* Bottom Row */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          viewport={{ once: true }}
-          className="flex flex-col md:flex-row justify-between items-center text-gray-600 text-sm"
-        >
-          <div className="flex items-center gap-4 mb-4 md:mb-0">
-            <p>© 2025 BharatTrip. All rights reserved.</p>
-            <div className="flex items-center gap-1 text-xs">
-              <span>Made with</span>
-              <Heart size={12} className="text-rose-500" />
-              <span>in India</span>
-            </div>
+        {/* Bottom */}
+        <div className="flex flex-col md:flex-row justify-between items-center text-gray-600 text-xs gap-3">
+          <p>© 2025 BharatTrip. All rights reserved.</p>
+
+          <div className="flex items-center gap-1">
+            <span>Made with</span>
+            <Heart size={11} className="text-rose-500" />
+            <span>in India</span>
           </div>
 
-          <div className="flex gap-6">
-            {["Privacy", "Terms", "Cookies"].map((item) => (
-              <Link
-                key={item}
-                href="#"
-                className="hover:text-rose-500 transition-colors text-xs"
-              >
-                {item}
-              </Link>
-            ))}
-          </div>
-        </motion.div>
+       <div className="flex gap-4">
+  {[
+    { name: "Privacy", href: "/privacy" },
+    { name: "Terms", href: "/terms" },
+    { name: "Cookies", href: "/cookies" }
+  ].map((item) => (
+    <Link
+      key={item.name}
+      href={item.href}
+      className="hover:text-rose-500 transition"
+    >
+      {item.name}
+    </Link>
+  ))}
+</div>
+
+        </div>
       </motion.div>
     </footer>
   );

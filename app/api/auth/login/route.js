@@ -25,8 +25,6 @@ export async function POST(req) {
 
   const response = NextResponse.json({ message: "Login successful" }, { status: 200 });
 
-  response.headers.set("Access-Control-Allow-Credentials", "true");
-
   response.cookies.set({
     name: "token",
     value: token,
@@ -34,7 +32,7 @@ export async function POST(req) {
     secure: false,
     sameSite: "strict",
     path: "/",
-    maxAge: 7 * 24 * 60 * 60,
+    maxAge: 7 * 24 * 60 * 60
   });
 
   return response;
